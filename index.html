@@ -18,8 +18,15 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://odorcoffee.github.io/image/share-preview.jpg" />
 <link rel="icon" type="image/png" sizes="32x32" href="image/favicon-32.png" />
-<link rel="icon" type="image/png" sizes="192x192" href="image/favicon-192.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="image/icon-192.png" />
+<!-- Home-screen app: the full ODOR COFFEE logo as the icon, "ODOR" as the name -->
 <link rel="apple-touch-icon" href="image/apple-touch-icon.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="apple-mobile-web-app-title" content="ODOR" />
+<meta name="application-name" content="ODOR" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -133,6 +140,11 @@
   .intro-hidden { display: none !important; }
 
   html[data-theme="light"] .ambient-only-dark { display: none; }
+  .ambient-glow {
+    background:
+      radial-gradient(26rem 26rem at -4rem -6rem, rgb(212 165 116 / .10), transparent 70%),
+      radial-gradient(26rem 26rem at calc(100% + 4rem) 40%, rgb(156 107 60 / .10), transparent 70%);
+  }
 
   summary.footer-summary { list-style: none; cursor: pointer; }
   summary.footer-summary::-webkit-details-marker { display: none; }
@@ -369,20 +381,17 @@
     object-position: center;
     display: block;
   }
-  /* A wide photo (fit:'contain') is shown whole, over a soft blurred copy that fills the square */
-  .hero-slide .hero-fill {
-    position: absolute;
-    inset: -24px;
-    width: calc(100% + 48px);
-    height: calc(100% + 48px);
-    object-fit: cover;
-    filter: blur(18px) brightness(.8);
-    transform: scale(1.05);
-  }
-  .hero-slide img.hero-contain { object-fit: contain; }
 
   /* Parallax: the whole slider drifts down slower than the page scrolls, and the menu below slides over it. */
   #heroSlider { z-index: 0; will-change: transform; }
+  /* Where the browser can link it to the scroll itself, it runs there (smooth); the range is set from the script */
+  @supports (animation-timeline: scroll()) {
+    #heroSlider.plx-css {
+      animation: heroPlx linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+  @keyframes heroPlx { to { transform: translate3d(0, var(--plx-y, 0px), 0); } }
   #grid, #emptyState {
     position: relative;
     z-index: 1;
@@ -535,10 +544,8 @@
      APP (menu)
      ================================================================== -->
 
-<div class="ambient-only-dark pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-  <div class="absolute -top-40 -start-32 h-96 w-96 rounded-full bg-gold/10 blur-3xl"></div>
-  <div class="absolute top-1/3 -end-32 h-96 w-96 rounded-full bg-brand/10 blur-3xl"></div>
-</div>
+<!-- soft warm glows behind the page (gradients, not blur filters, so scrolling stays smooth on phones) -->
+<div class="ambient-only-dark ambient-glow pointer-events-none fixed inset-0 -z-10" aria-hidden="true"></div>
 
 <!-- ============================== HEADER ============================== -->
 <header class="sticky top-0 z-40 border-b border-edge/5 bg-base/85 backdrop-blur-xl">
@@ -1056,9 +1063,9 @@ const ART = {
     '<circle cx="48" cy="64" r="1.6"/><circle cx="60" cy="74" r="1.3"/><circle cx="52" cy="86" r="1.8"/><circle cx="66" cy="60" r="1.2"/>',
 };
 
-/* Slides: the shop's photos, in this order. A wide photo gets fit:'contain' so nothing is cut off. */
+/* Slides: the shop's photos, in this order (square pictures; slide 1 has its blurred fill baked in, no live blur) */
 const HERO_SLIDES = [
-  { src:'image/slide1-beans.webp',  fit:'contain',
+  { src:'image/slide1-beans.webp',
     alt:{ en:'Coffee beans on a wooden table', ar:'حبوب قهوة على طاولة خشبية', ku:'دانەی قاوە لەسەر مێزێکی دار' } },
   { src:'image/slide2-pour.webp',
     alt:{ en:'Coffee beans being poured', ar:'سكب حبوب القهوة', ku:'ڕژاندنی دانەی قاوە' } },
@@ -1902,9 +1909,7 @@ function renderHeroSlider() {
   track.innerHTML = HERO_SLIDES.map((s, i) => {
     const load = 'loading="' + (i === 0 ? 'eager' : 'lazy') + '" ' + (i === 0 ? 'fetchpriority="high" ' : '') + 'decoding="async" draggable="false"';
     return '<div class="hero-slide" role="group" aria-roledescription="slide" aria-label="' + (i + 1) + ' / ' + HERO_SLIDES.length + '">' +
-      (s.fit === 'contain' ? '<img class="hero-fill" src="' + esc(s.src) + '" alt="" aria-hidden="true" ' + load + ' />' : '') +
-      '<img src="' + esc(s.src) + '" alt="' + esc(tx(s.alt)) + '" ' + load + ' ' +
-        (s.fit === 'contain' ? 'class="hero-contain" ' : '') + 'onerror="this.style.display=\'none\'" />' +
+      '<img src="' + esc(s.src) + '" alt="' + esc(tx(s.alt)) + '" ' + load + ' onerror="this.style.display=\'none\'" />' +
     '</div>';
   }).join('');
 
@@ -1967,6 +1972,27 @@ function initHeroSlider() {
 function initHeroParallax(slider) {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const header = document.querySelector('body > header');
+
+  // Browsers that run scroll-linked animations themselves (recent Chrome / Safari): the browser moves the
+  // slider in step with the scroll, off the page's own code, so it never trails behind the finger.
+  // We only tell it where the effect starts and ends: the same 35% hold-back as below.
+  if (window.CSS && CSS.supports('animation-timeline: scroll()')) {
+    const measure = () => {
+      if (!slider.offsetHeight || (header && !header.offsetHeight)) return;   // the entry screen is still covering the menu
+      let docTop = 0;
+      for (let el = slider; el; el = el.offsetParent) docTop += el.offsetTop;   // layout position (ignores the shift)
+      const start = Math.max(0, docTop - (header ? header.offsetHeight : 0));
+      // set directly (not through a variable): browsers don't always pick up a changed variable in the range
+      slider.style.animationRange = start + 'px ' + (start + slider.offsetHeight) + 'px';
+      slider.style.setProperty('--plx-y', Math.round(slider.offsetHeight * 0.35) + 'px');
+      slider.classList.add('plx-css');
+    };
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(measure).observe(document.body);   // text above it changed size
+    return;
+  }
+
   let ticking = false;
   let current = 0;
   const update = () => {
