@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-locale="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#120E0A" id="themeColorMeta" />
+<title>ODOR Coffee — Digital Menu</title>
+<meta name="description" content="ODOR Coffee — hot coffee, cold coffee and fresh juice. Browse the menu in English, Kurdish or Arabic." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ODOR Coffee" />
+<meta property="og:title" content="ODOR Coffee — Digital Menu" />
+<meta property="og:description" content="Hot coffee, cold coffee and fresh juice." />
+<meta property="og:url" content="https://odorcoffee.github.io/" />
+<meta property="og:image" content="https://odorcoffee.github.io/image/share-preview.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="ODOR Coffee logo" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://odorcoffee.github.io/image/share-preview.jpg" />
+<link rel="icon" type="image/png" sizes="32x32" href="image/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="image/favicon-192.png" />
+<link rel="apple-touch-icon" href="image/apple-touch-icon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800;900&family=Cairo:wght@400;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  /* Colours: cream & bronze by day, espresso & gold at night */
+  :root, html[data-theme="light"] {
+    --c-base:         246 241 233;
+    --c-surface:      255 255 255;
+    --c-surface-alt:  237 229 216;
+    --c-ink:          31 26 21;
+    --c-muted:        110 100 88;
+    --c-edge:         31 26 21;
+    --c-accent:       138 92 50;
+    --c-pill:         156 107 60;
+    --c-on-pill:      255 255 255;
+    --shadow-card:    rgba(31,26,21,.12);
+    --art-bg-1:       #F1E8DA;
+    --art-bg-2:       #E3D2BA;
+    --art-line:       #8A5C32;
+  }
+  html[data-theme="dark"] {
+    --c-base:         18 14 10;
+    --c-surface:      30 24 19;
+    --c-surface-alt:  46 37 29;
+    --c-ink:          245 239 230;
+    --c-muted:        168 154 136;
+    --c-edge:         255 255 255;
+    --c-accent:       212 165 116;
+    --c-pill:         212 165 116;
+    --c-on-pill:      26 20 14;
+    --shadow-card:    rgba(0,0,0,.7);
+    --art-bg-1:       #2C2219;
+    --art-bg-2:       #17120D;
+    --art-line:       #D4A574;
+  }
+</style>
+
+<script src="https://unpkg.com/lucide@0.451.0/dist/umd/lucide.js"></script>
+
+<style>
+  :root { color-scheme: light; }
+  html[data-theme="dark"] { color-scheme: dark; }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body { overscroll-behavior-y: none; }
+
+  body.intro-active > header,
+  body.intro-active > main,
+  body.intro-active > footer,
+  body.intro-active > .ambient-only-dark {
+    display: none !important;
+  }
+
+  /* Arabic: Cairo. Kurdish (Sorani): Noto Sans Arabic, which covers ڕ ڵ ێ ۆ ە fully */
+  html[data-locale="ar"] { --rtl-font: 'Cairo', 'Noto Sans Arabic', system-ui, sans-serif; }
+  html[data-locale="ku"] { --rtl-font: 'Noto Sans Arabic', 'Cairo', system-ui, sans-serif; }
+  html[data-locale="ar"] body, html[data-locale="ku"] body,
+  html[data-locale="ar"] input, html[data-locale="ku"] input,
+  html[data-locale="ar"] button, html[data-locale="ku"] button,
+  html[data-locale="ar"] .font-display, html[data-locale="ku"] .font-display,
+  html[data-locale="ar"] .wordmark, html[data-locale="ku"] .wordmark,
+  html[data-locale="ar"] .menu-section-title, html[data-locale="ku"] .menu-section-title {
+    font-family: var(--rtl-font);
+  }
+  html[data-locale="ku"] body { line-height: 1.6; }
+  /* Letter-spacing breaks the joined letters of Arabic script */
+  html[data-locale="ar"] *, html[data-locale="ku"] * { letter-spacing: 0 !important; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  [dir="rtl"] .rtl-flip { transform: scaleX(-1); }
+
+  .modal-panel {
+    transform: translateY(100%);
+    transition: transform .32s cubic-bezier(.22, 1, .36, 1), opacity .2s ease;
+    will-change: transform;
+  }
+  .modal-panel.is-open { transform: translateY(0); }
+  @media (min-width: 640px) {
+    .modal-panel { transform: translateY(14px) scale(.98); opacity: 0; }
+    .modal-panel.is-open { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      transition-duration: .001ms !important;
+    }
+  }
+
+  :focus-visible { outline: 2px solid rgb(var(--c-accent)); outline-offset: 2px; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  .wordmark {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: .95;
+  }
+  .wordmark-sub {
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+  }
+
+  .intro-hidden { display: none !important; }
+
+  html[data-theme="light"] .ambient-only-dark { display: none; }
+
+  summary.footer-summary { list-style: none; cursor: pointer; }
+  summary.footer-summary::-webkit-details-marker { display: none; }
+  summary.footer-summary::marker { display: none; content: ''; }
+  details[open] .footer-chevron { transform: rotate(180deg); }
+  .footer-chevron { transition: transform .2s ease; }
+
+  .menu-section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  [data-section] { scroll-margin-top: 220px; }
+  html { scroll-behavior: smooth; }
+
+  /* ── Category nav ── */
+  .cat-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 4px 10px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.22,1,.36,1);
+  }
+  .cat-btn:active { transform: scale(.96); }
+
+  .cat-icon-wrap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 9999px;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px rgb(var(--c-accent) / .22);
+    transition:
+      background-color .28s ease,
+      box-shadow .28s ease,
+      transform .28s cubic-bezier(.22,1,.36,1);
+  }
+  @media (min-width: 640px) {
+    .cat-icon-wrap { width: 64px; height: 64px; }
+  }
+
+  .cat-icon-wrap svg {
+    width: 26px;
+    height: 26px;
+    stroke-width: 1.75;
+    color: rgb(var(--c-accent));
+    transition: color .28s ease, transform .28s cubic-bezier(.22,1,.36,1);
+  }
+  .cat-icon-wrap svg.cat-svg { width: 30px; height: 30px; stroke-width: 1.9; }
+  @media (min-width: 640px) {
+    .cat-icon-wrap svg { width: 30px; height: 30px; }
+    .cat-icon-wrap svg.cat-svg { width: 34px; height: 34px; }
+  }
+
+  .cat-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(var(--c-muted));
+    transition: color .28s ease;
+    white-space: nowrap;
+  }
+  @media (min-width: 640px) {
+    .cat-label { font-size: 12px; }
+  }
+
+  .cat-btn.is-active .cat-icon-wrap {
+    background: rgb(var(--c-pill));
+    box-shadow:
+      0 10px 24px -10px rgb(var(--c-pill) / .6),
+      inset 0 0 0 1px rgb(var(--c-pill));
+    transform: translateY(-2px);
+  }
+  .cat-btn.is-active .cat-icon-wrap svg {
+    color: rgb(var(--c-on-pill));
+    transform: scale(1.05);
+  }
+  .cat-btn.is-active .cat-label {
+    color: rgb(var(--c-ink));
+  }
+
+  .cat-btn .cat-dot {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: rgb(var(--c-accent));
+    opacity: 0;
+    transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+  }
+  .cat-btn.is-active .cat-dot {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+
+  .cat-btn:not(.is-active):hover .cat-icon-wrap {
+    background: rgb(var(--c-accent) / .08);
+    box-shadow: inset 0 0 0 1px rgb(var(--c-accent) / .4);
+  }
+  .cat-btn:not(.is-active):hover .cat-label {
+    color: rgb(var(--c-ink));
+  }
+
+  /* ── Item image container ── */
+  .item-media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    overflow: hidden;
+  }
+  .item-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform .5s cubic-bezier(.22,1,.36,1);
+  }
+  .group:hover .item-media img { transform: scale(1.05); }
+
+  /* ── Drink illustrations (shown until a photo is added) ── */
+  .item-art {
+    background:
+      radial-gradient(120% 90% at 30% 15%, rgb(255 255 255 / .07), transparent 55%),
+      linear-gradient(155deg, var(--art-bg-1), var(--art-bg-2));
+    color: var(--art-line);
+  }
+  .item-art svg {
+    position: absolute;
+    inset: 12%;
+    width: 76%;
+    height: 76%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .5s cubic-bezier(.22,1,.36,1);
+  }
+  .group:hover .item-art svg { transform: scale(1.05) rotate(-1.5deg); }
+  .item-art .soft { fill: currentColor; stroke: none; opacity: .16; }
+  .item-art .solid { fill: currentColor; stroke: none; }
+  .item-art .tint { fill: var(--tint, currentColor); stroke: none; opacity: .55; }
+  .item-art .steam { opacity: .7; }
+  .item-art::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 30%;
+    background: linear-gradient(to top, rgb(0 0 0 / .14), transparent);
+    pointer-events: none;
+  }
+  html[data-theme="light"] .item-art::after { background: linear-gradient(to top, rgb(138 92 50 / .08), transparent); }
+
+  /* ── Entry screen background (warm glow + rising steam) ── */
+  .intro-bg {
+    background:
+      radial-gradient(60% 45% at 50% 38%, rgb(212 165 116 / .22), transparent 70%),
+      radial-gradient(50% 40% at 85% 95%, rgb(156 107 60 / .25), transparent 70%),
+      radial-gradient(45% 35% at 10% 5%, rgb(156 107 60 / .18), transparent 70%),
+      rgb(var(--c-base));
+  }
+  html[data-theme="light"] .intro-bg {
+    background:
+      radial-gradient(60% 45% at 50% 38%, rgb(212 165 116 / .35), transparent 70%),
+      radial-gradient(50% 40% at 85% 95%, rgb(156 107 60 / .18), transparent 70%),
+      radial-gradient(45% 35% at 10% 5%, rgb(212 165 116 / .25), transparent 70%),
+      rgb(var(--c-base));
+  }
+  .intro-steam path {
+    fill: none;
+    stroke: rgb(var(--c-accent));
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    opacity: 0;
+    animation: steamRise 7s ease-in-out infinite;
+  }
+  .intro-steam path:nth-child(2) { animation-delay: 2.3s; }
+  .intro-steam path:nth-child(3) { animation-delay: 4.6s; }
+  @keyframes steamRise {
+    0%   { opacity: 0;   transform: translateY(40px); }
+    30%  { opacity: .35; }
+    100% { opacity: 0;   transform: translateY(-60px); }
+  }
+  .intro-beans { color: rgb(var(--c-accent)); opacity: .08; }
+  html[data-theme="light"] .intro-beans { opacity: .12; }
+
+  /* ── Hero slider ── */
+  #heroSlider {
+    position: relative;
+    overflow: hidden;
+    background: #17120D;
+    touch-action: pan-y;
+    user-select: none;
+  }
+  #heroTrack {
+    display: flex;
+    width: 100%;
+    transition: transform .55s cubic-bezier(.22,1,.36,1);
+    will-change: transform;
+  }
+  .hero-slide {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    min-height: 340px;
+    overflow: hidden;
+    background: #17120D;
+  }
+  @media (min-width: 640px)  { .hero-slide { aspect-ratio: 1 / 1;  } }
+  @media (min-width: 1024px) { .hero-slide { aspect-ratio: 16 / 9; } }
+
+  .hero-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  /* Story slides (shown until photos are added): espresso background, gold drawing, words over it */
+  .hero-story {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(70% 55% at var(--glow-x, 70%) 30%, rgb(212 165 116 / .28), transparent 70%),
+      radial-gradient(60% 50% at 10% 100%, rgb(94 61 34 / .7), transparent 70%),
+      linear-gradient(165deg, #2A2018, #120E0A 70%);
+  }
+  .hero-story svg {
+    position: absolute;
+    top: 6%;
+    inset-inline-end: -4%;
+    width: 78%;
+    height: 62%;
+    color: #D4A574;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: .95;
+  }
+  @media (min-width: 1024px) { .hero-story svg { width: 46%; height: 80%; top: 10%; inset-inline-end: 4%; } }
+  .hero-story .soft { fill: currentColor; stroke: none; opacity: .14; }
+  .hero-story .solid { fill: currentColor; stroke: none; }
+  .hero-story .faint { opacity: .45; }
+  .hero-copy {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 0 24px 48px;
+    color: #fff;
+    text-align: start;
+  }
+  @media (min-width: 640px) { .hero-copy { padding: 0 40px 56px; } }
+  .hero-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: #D4A574;
+  }
+  .hero-title {
+    margin-top: 10px;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 800;
+    font-size: clamp(28px, 8vw, 46px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+  .hero-text {
+    margin-top: 10px;
+    max-width: 30rem;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgb(255 255 255 / .78);
+  }
+  html[data-locale="ar"] .hero-title, html[data-locale="ku"] .hero-title { font-family: var(--rtl-font); font-weight: 800; line-height: 1.35; }
+  .hero-slide.is-current .hero-copy > * { animation: copyIn .7s cubic-bezier(.22,1,.36,1) both; }
+  .hero-slide.is-current .hero-copy > :nth-child(2) { animation-delay: .08s; }
+  .hero-slide.is-current .hero-copy > :nth-child(3) { animation-delay: .16s; }
+  @keyframes copyIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* Parallax: the whole slider drifts down slower than the page scrolls, and the menu below slides over it. */
+  #heroSlider { z-index: 0; will-change: transform; }
+  #grid, #emptyState {
+    position: relative;
+    z-index: 1;
+    background: rgb(var(--c-base));
+    /* stretch the background to the screen edges (the slider is full width) without moving the content */
+    box-shadow: 0 0 0 100vmax rgb(var(--c-base));
+    clip-path: inset(0 -100vmax);
+  }
+
+  /* Soft rise-in for cards and section titles as they scroll into view. */
+  .reveal { opacity: 0; }
+  .reveal.is-in {
+    opacity: 1;
+    animation: revealUp .6s cubic-bezier(.22,1,.36,1) var(--reveal-delay, 0ms) backwards;
+  }
+  @keyframes revealUp {
+    from { opacity: 0; transform: translateY(16px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; }
+    .reveal.is-in { animation: none; }
+    #heroSlider { transform: none !important; }
+    .intro-steam path { animation: none; opacity: .2; }
+  }
+
+  .hero-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 9999px;
+    background: rgba(255,255,255,.45);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.15);
+    cursor: pointer;
+    transition: width .25s ease, background-color .25s ease;
+  }
+  .hero-dot.is-active { width: 22px; background: #D4A574; }
+
+  /* ── Language switcher ── */
+  .lang-trigger { cursor: pointer; }
+  .lang-chevron { transition: transform .2s ease; }
+  .lang-trigger[aria-expanded="true"] .lang-chevron { transform: rotate(180deg); }
+  .lang-menu {
+    animation: langMenuIn .18s cubic-bezier(.22,1,.36,1);
+    transform-origin: top right;
+  }
+  [dir="rtl"] .lang-menu { transform-origin: top left; }
+  @keyframes langMenuIn {
+    from { opacity: 0; transform: translateY(-4px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .lang-item { cursor: pointer; }
+</style>
+<!-- Prebuilt Tailwind (no build step needed to open the page). After changing classes, rebuild with:
+     npx tailwindcss@3.4.17 -c tailwind.config.js -i tailwind.input.css -o tailwind.css --minify -->
+<link rel="stylesheet" href="tailwind.css" />
+</head>
+
+<body class="min-h-screen bg-base font-sans text-ink antialiased selection:bg-gold/30">
+
+<!-- ==================================================================
+     INTRO / ENTRY SCREEN
+     ================================================================== -->
+<section id="introScreen"
+  class="fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-base">
+
+  <div class="intro-bg absolute inset-0 overflow-hidden" aria-hidden="true">
+    <!-- coffee beans scattered in the background -->
+    <svg class="intro-beans absolute inset-0 h-full w-full" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
+      <g fill="currentColor">
+        <g transform="translate(40 90) rotate(-25)"><ellipse rx="22" ry="15"/><path d="M-20 0c10-6 30 6 40 0" stroke="rgb(var(--c-base))" stroke-width="3" fill="none"/></g>
+        <g transform="translate(340 160) rotate(30)"><ellipse rx="16" ry="11"/><path d="M-14 0c7-4 21 4 28 0" stroke="rgb(var(--c-base))" stroke-width="2.4" fill="none"/></g>
+        <g transform="translate(310 640) rotate(-40)"><ellipse rx="24" ry="16"/><path d="M-22 0c11-6 33 6 44 0" stroke="rgb(var(--c-base))" stroke-width="3" fill="none"/></g>
+        <g transform="translate(70 700) rotate(15)"><ellipse rx="14" ry="10"/><path d="M-12 0c6-4 18 4 24 0" stroke="rgb(var(--c-base))" stroke-width="2.2" fill="none"/></g>
+        <g transform="translate(360 420) rotate(65)"><ellipse rx="12" ry="8"/></g>
+        <g transform="translate(25 420) rotate(-60)"><ellipse rx="10" ry="7"/></g>
+      </g>
+    </svg>
+    <!-- slow steam rising behind the logo -->
+    <svg class="intro-steam absolute left-1/2 top-[4%] h-44 w-28 -translate-x-1/2" viewBox="0 0 80 160">
+      <path d="M30 150c-14-22 14-34 0-58s14-36 0-60"/>
+      <path d="M44 150c-14-22 14-34 0-58s14-36 0-60"/>
+      <path d="M56 150c-14-22 14-34 0-58s14-36 0-60"/>
+    </svg>
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20"></div>
+  </div>
+
+  <div class="relative z-30 flex items-center justify-end gap-2 px-5 pt-[max(1rem,env(safe-area-inset-top))]">
+    <div id="introLangSwitcher" class="relative"></div>
+
+    <button id="introThemeToggle" type="button"
+      class="grid h-10 w-10 place-items-center rounded-xl bg-surface/85 ring-1 ring-edge/10 backdrop-blur transition hover:ring-gold/50"
+      aria-label="Toggle theme">
+      <i data-lucide="sun" class="h-5 w-5"></i>
+    </button>
+  </div>
+
+  <div class="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-4 pt-6 text-center">
+
+    <div class="animate-riseIn">
+      <img
+        src="image/logo.webp"
+        alt="ODOR Coffee"
+        class="h-auto w-[80vw] max-w-[380px] select-none drop-shadow-2xl"
+        draggable="false"
+        decoding="async"
+      />
+    </div>
+
+    <p class="wordmark-sub mt-6 text-[10px] font-semibold text-ink/80 sm:text-xs" data-i18n="restaurant">COFFEE &amp; JUICE</p>
+
+    <button id="enterMenuBtn" type="button"
+      class="mt-14 w-full max-w-sm animate-riseIn rounded-2xl bg-gradient-to-r from-brand to-brandDark px-6 py-4 text-sm font-bold text-white shadow-glow transition hover:from-brandDark hover:to-brandDeeper active:scale-[.98]"
+      style="animation-delay:.2s">
+      <span data-i18n="openMenu">Menu</span>
+    </button>
+
+    <div class="social-row mt-8 flex animate-riseIn flex-wrap items-center justify-center gap-3" style="animation-delay:.3s">
+      <a data-link="instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+         class="grid h-11 w-11 place-items-center rounded-2xl bg-surface/85 text-ink ring-1 ring-edge/10 backdrop-blur transition hover:bg-brand hover:text-white hover:ring-brand">
+        <i data-lucide="instagram" class="h-5 w-5"></i>
+      </a>
+      <a data-link="facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+         class="grid h-11 w-11 place-items-center rounded-2xl bg-surface/85 text-ink ring-1 ring-edge/10 backdrop-blur transition hover:bg-brand hover:text-white hover:ring-brand">
+        <i data-lucide="facebook" class="h-5 w-5"></i>
+      </a>
+      <a data-link="tiktok" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+         class="grid h-11 w-11 place-items-center rounded-2xl bg-surface/85 text-ink ring-1 ring-edge/10 backdrop-blur transition hover:bg-brand hover:text-white hover:ring-brand">
+        <i data-lucide="music-2" class="h-5 w-5"></i>
+      </a>
+      <a data-link="whatsapp" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+         class="grid h-11 w-11 place-items-center rounded-2xl bg-surface/85 text-ink ring-1 ring-edge/10 backdrop-blur transition hover:bg-brand hover:text-white hover:ring-brand">
+        <i data-lucide="message-circle" class="h-5 w-5"></i>
+      </a>
+      <a data-link="maps" target="_blank" rel="noopener noreferrer" aria-label="Location"
+         class="grid h-11 w-11 place-items-center rounded-2xl bg-surface/85 text-ink ring-1 ring-edge/10 backdrop-blur transition hover:bg-brand hover:text-white hover:ring-brand">
+        <i data-lucide="map-pin" class="h-5 w-5"></i>
+      </a>
+    </div>
+  </div>
+
+  <p class="relative z-10 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4 text-center text-[11px] text-ink/70">
+    © <span id="yearNowIntro"></span> <span data-i18n="brand">ODOR Coffee</span>
+  </p>
+</section>
+
+<!-- ==================================================================
+     APP (menu)
+     ================================================================== -->
+
+<div class="ambient-only-dark pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+  <div class="absolute -top-40 -start-32 h-96 w-96 rounded-full bg-gold/10 blur-3xl"></div>
+  <div class="absolute top-1/3 -end-32 h-96 w-96 rounded-full bg-brand/10 blur-3xl"></div>
+</div>
+
+<!-- ============================== HEADER ============================== -->
+<header class="sticky top-0 z-40 border-b border-edge/5 bg-base/85 backdrop-blur-xl">
+  <div class="mx-auto max-w-6xl px-4">
+
+    <div class="flex h-16 items-center gap-2 sm:gap-3">
+      <button id="homeBtn" type="button" aria-label="Home"
+        class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface ring-1 ring-edge/5 transition hover:ring-gold/50">
+        <i data-lucide="chevron-left" class="h-5 w-5 rtl-flip"></i>
+      </button>
+
+      <div class="flex min-w-0 flex-1 items-center">
+        <img
+          src="image/logo.webp"
+          alt="ODOR Coffee"
+          class="h-auto max-h-11 w-auto max-w-full select-none sm:max-h-12"
+          draggable="false"
+          decoding="async"
+        />
+      </div>
+
+      <div class="ms-auto flex shrink-0 items-center gap-2">
+        <div id="langSwitcher" class="relative"></div>
+
+        <button id="themeToggle" type="button"
+          class="grid h-10 w-10 place-items-center rounded-xl bg-surface ring-1 ring-edge/5 transition hover:ring-gold/50"
+          aria-label="Toggle theme">
+          <i data-lucide="sun" class="h-5 w-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="pb-3">
+      <div class="relative">
+        <i data-lucide="search" class="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-muted start-3"></i>
+        <input id="searchInput" type="search" autocomplete="off"
+          class="w-full rounded-xl border-0 bg-surface py-2.5 text-sm text-ink ring-1 ring-edge/5 transition placeholder:text-muted focus:ring-2 focus:ring-gold/60 ps-10 pe-10"
+          placeholder="Search coffee, juice, latte…" aria-label="Search the menu" />
+        <button id="searchClear" type="button"
+          class="absolute top-1/2 hidden h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-muted transition hover:bg-edge/5 hover:text-ink end-2"
+          aria-label="Clear search">
+          <i data-lucide="x" class="h-4 w-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-edge/5 bg-base/70">
+    <div id="tabs" class="no-scrollbar mx-auto flex max-w-2xl items-start justify-between gap-1 overflow-x-auto px-6 pt-3 pb-1" role="tablist" aria-label="Menu categories"></div>
+  </div>
+</header>
+
+<!-- =============================== MAIN =============================== -->
+<main class="mx-auto max-w-6xl px-4 pb-10 pt-5">
+
+  <section class="mb-8">
+    <div class="mb-6 text-center">
+      <h1 id="menuTitle" class="font-display text-2xl sm:text-3xl">Our menu</h1>
+      <p id="menuSubtitle" class="mt-1 text-sm text-muted">Brewed with care, served with soul.</p>
+    </div>
+
+    <div id="heroSlider"
+         class="-mx-4 relative overflow-hidden"
+         dir="ltr"
+         aria-roledescription="carousel"
+         aria-label="Featured">
+      <div id="heroTrack" class="flex"></div>
+
+      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent"></div>
+
+      <button id="heroPrev" type="button" aria-label="Previous slide"
+        class="absolute top-1/2 start-2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/70 active:scale-95">
+        <i data-lucide="chevron-left" class="h-4 w-4"></i>
+      </button>
+      <button id="heroNext" type="button" aria-label="Next slide"
+        class="absolute top-1/2 end-2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/70 active:scale-95">
+        <i data-lucide="chevron-right" class="h-4 w-4"></i>
+      </button>
+
+      <div id="heroDots" class="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5"></div>
+    </div>
+  </section>
+
+  <div id="grid"></div>
+
+  <div id="emptyState" class="hidden flex-col items-center justify-center rounded-2xl bg-surface/60 py-16 text-center ring-1 ring-edge/5">
+    <div class="grid h-14 w-14 place-items-center rounded-full bg-edge/5 text-muted">
+      <i data-lucide="search-x" class="h-6 w-6"></i>
+    </div>
+    <p id="emptyTitle" class="mt-4 font-display text-lg">Nothing matches that</p>
+    <p id="emptyHint" class="mt-1 text-sm text-muted">Try a different search or category.</p>
+  </div>
+
+  <section class="mt-10 overflow-hidden rounded-3xl bg-gradient-to-br from-brand via-brandDark to-brandDeeper text-white shadow-glow ring-1 ring-brand/30">
+    <div class="relative px-6 py-8 sm:px-10 sm:py-10">
+      <div class="pointer-events-none absolute -top-16 -end-10 h-48 w-48 rounded-full bg-white/10 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-20 -start-10 h-56 w-56 rounded-full bg-black/20 blur-3xl"></div>
+
+      <div class="relative flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
+        <div class="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-white/15 ring-1 ring-white/25 backdrop-blur">
+          <i data-lucide="coffee" class="h-8 w-8"></i>
+        </div>
+
+        <div class="flex-1">
+          <h3 class="font-display text-2xl leading-tight sm:text-3xl" data-i18n="infoTitle">
+            Brewed for the senses
+          </h3>
+          <p class="mt-2 max-w-xl text-sm leading-relaxed text-white/85" data-i18n="infoText">
+            From a quick espresso to a cold juice on a warm day, everything is made with care. Thank you for stopping by.
+          </p>
+        </div>
+
+        <div id="infoActions" class="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap">
+          <a data-link="phone"
+             class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/15 px-4 py-3 text-xs font-bold text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-white/25 sm:flex-none">
+            <i data-lucide="phone-call" class="h-4 w-4"></i>
+            <span data-i18n="callCta">Call</span>
+          </a>
+          <a data-link="whatsapp" target="_blank" rel="noopener noreferrer"
+             class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/15 px-4 py-3 text-xs font-bold text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-white/25 sm:flex-none">
+            <i data-lucide="message-circle" class="h-4 w-4"></i>
+            <span data-i18n="chatCta">Chat</span>
+          </a>
+          <a data-link="maps" target="_blank" rel="noopener noreferrer"
+             class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/15 px-4 py-3 text-xs font-bold text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-white/25 sm:flex-none">
+            <i data-lucide="navigation" class="h-4 w-4"></i>
+            <span data-i18n="directionsCta">Directions</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="mt-6 border-t border-edge/5 bg-surface">
+  <div class="mx-auto max-w-6xl px-4 pt-10 pb-[max(3rem,env(safe-area-inset-bottom))]">
+
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+      <div>
+        <div class="flex items-center gap-2.5">
+          <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand to-brandDark text-white shadow-glow">
+            <i data-lucide="coffee" class="h-5 w-5"></i>
+          </div>
+          <div class="min-w-0">
+            <p class="truncate font-display text-lg font-black uppercase leading-none tracking-tight text-ink" data-i18n="brand">ODOR Coffee</p>
+            <p class="truncate text-[11px] text-muted" data-i18n="tagline">Coffee, cold drinks &amp; fresh juice</p>
+          </div>
+        </div>
+
+        <p class="mt-4 max-w-xs text-xs leading-relaxed text-muted" data-i18n="footerTagline">
+          Hot coffee, cold coffee and fresh juice, made with care.
+        </p>
+
+        <div class="social-row mt-5 flex flex-wrap items-center gap-3">
+          <a data-link="instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+             class="grid h-10 w-10 place-items-center rounded-2xl bg-surfaceAlt text-ink ring-1 ring-edge/5 transition hover:bg-brand hover:text-white hover:ring-brand">
+            <i data-lucide="instagram" class="h-4 w-4"></i>
+          </a>
+          <a data-link="facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+             class="grid h-10 w-10 place-items-center rounded-2xl bg-surfaceAlt text-ink ring-1 ring-edge/5 transition hover:bg-brand hover:text-white hover:ring-brand">
+            <i data-lucide="facebook" class="h-4 w-4"></i>
+          </a>
+          <a data-link="tiktok" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+             class="grid h-10 w-10 place-items-center rounded-2xl bg-surfaceAlt text-ink ring-1 ring-edge/5 transition hover:bg-brand hover:text-white hover:ring-brand">
+            <i data-lucide="music-2" class="h-4 w-4"></i>
+          </a>
+          <a data-link="whatsapp" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+             class="grid h-10 w-10 place-items-center rounded-2xl bg-surfaceAlt text-ink ring-1 ring-edge/5 transition hover:bg-brand hover:text-white hover:ring-brand">
+            <i data-lucide="message-circle" class="h-4 w-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <div id="contactBlock">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-muted" data-i18n="contactTitle">Contact</h3>
+
+        <address class="mt-4 space-y-3 text-sm not-italic">
+          <a id="addressLink" data-link="maps" target="_blank" rel="noopener noreferrer"
+             class="flex items-start gap-2.5 text-ink transition hover:text-accent">
+            <i data-lucide="map-pin" class="mt-0.5 h-4 w-4 shrink-0 text-accent"></i>
+            <span class="leading-snug">
+              <span id="addressLine1" class="block"></span>
+              <span id="addressLine2" class="block text-muted"></span>
+            </span>
+          </a>
+
+          <a data-link="phone"
+             class="flex items-center gap-2.5 text-ink transition hover:text-accent">
+            <i data-lucide="phone" class="h-4 w-4 shrink-0 text-accent"></i>
+            <span id="phoneText" class="tnum" dir="ltr"></span>
+          </a>
+        </address>
+      </div>
+
+      <div id="hoursBlock" class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand via-brandDark to-brandDeeper p-5 text-white shadow-glow ring-1 ring-brand/30">
+        <div class="pointer-events-none absolute -top-12 -end-8 h-36 w-36 rounded-full bg-white/10 blur-3xl"></div>
+        <div class="pointer-events-none absolute -bottom-14 -start-8 h-40 w-40 rounded-full bg-black/20 blur-3xl"></div>
+
+        <div class="relative">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-white/80" data-i18n="openingHours">Opening Hours</h3>
+
+          <p class="mt-4 flex items-center gap-2 text-sm text-white">
+            <i data-lucide="calendar-check" class="h-4 w-4 shrink-0 text-white"></i>
+            <span data-i18n="openDaily">Open Daily</span>
+          </p>
+          <p class="mt-1 flex items-center gap-2 text-sm text-white">
+            <i data-lucide="clock" class="h-4 w-4 shrink-0 text-white"></i>
+            <span id="hoursRange" class="tnum" dir="ltr"></span>
+          </p>
+
+          <details class="group mt-4 overflow-hidden rounded-2xl bg-white/[.12] ring-1 ring-white/25 backdrop-blur">
+            <summary class="footer-summary flex items-center justify-between gap-3 px-4 py-3.5">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <i data-lucide="clock" class="h-4 w-4 shrink-0 text-white"></i>
+                <span class="truncate text-sm font-semibold text-white" data-i18n="weeklySchedule">Weekly schedule</span>
+                <span id="openNowBadge"
+                      class="inline-flex shrink-0 items-center gap-1 rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-bold text-white ring-1 ring-white/40">
+                  <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
+                  <span id="openNowLabel">Open Now</span>
+                </span>
+              </div>
+              <i data-lucide="chevron-down" class="footer-chevron h-4 w-4 shrink-0 text-white/80"></i>
+            </summary>
+
+            <div class="border-t border-white/20 px-4 pb-3">
+              <ul id="hoursList" class="divide-y divide-white/15 text-sm text-white"></ul>
+              <p class="mt-3 text-[11px] text-white/75" data-i18n="hoursNote">
+                Times shown in Baghdad local time.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-edge/5 pt-6 text-[11px] text-muted sm:flex-row">
+      <p>© <span id="yearNow"></span> <span data-i18n="brand">ODOR Coffee</span>. <span data-i18n="rights">All rights reserved.</span></p>
+      <p class="font-display text-xs tracking-[0.3em] text-accent">ODOR</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ ITEM DETAILS =========================== -->
+<div id="modalRoot" class="fixed inset-0 z-50 hidden">
+  <div id="modalBackdrop" class="absolute inset-0 animate-fadeIn bg-black/75 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 flex items-end justify-center sm:items-center sm:p-4">
+    <div id="modalPanel" class="modal-panel flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl bg-surface ring-1 ring-edge/10 sm:max-w-lg sm:rounded-3xl"
+      role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ====================================================================
+ * §0 — SHOP DETAILS
+ * Fill these in. Anything left empty is hidden on the page, so nothing shows a broken link.
+ * ==================================================================== */
+
+const STORE = {
+  instagram: 'https://www.instagram.com/odor_coffe',
+  facebook:  'https://www.facebook.com/Odor-coffe-101269578621808/',
+  tiktok:    '',   // e.g. 'https://www.tiktok.com/@odorcoffee'
+  whatsapp:  'https://wa.me/9647511559191',
+  phone:     '+9647511559191',
+  // The shop's plus code (exact spot on Google Maps)
+  maps:      'https://www.google.com/maps/search/?api=1&query=6X3R%2BWHC%2C%20Erbil',
+  // Two address lines in each language (street, then city)
+  address: {
+    en: ['6X3R+WHC, Supermarket St', 'Erbil, Iraq'],
+    ar: ['شارع السوبرماركت، 6X3R+WHC', 'أربيل، العراق'],
+    ku: ['شەقامی سوپەرمارکێت، 6X3R+WHC', 'هەولێر، عێراق'],
+  },
+  // Opening hours in Baghdad time, 24-hour 'HH:MM' (close '00:00' = midnight). Empty = the hours card is hidden.
+  hours: { open: '08:00', close: '02:00' },   // daily 8:00 AM – 2:00 AM
+};
+
+/* ====================================================================
+ * §1 — MENU
+ * To add a photo: put it in image/ (square works best) and set image:'image/your-photo.webp'.
+ * Without a photo the card shows the drawing named in art.
+ * ==================================================================== */
+
+const MENU = [
+  /* ── Hot coffee ── */
+  { id:'odor-chocolate', category:'hot',
+    name:{en:'Odor Chocolate', ar:'شوكولاتة أودور', ku:'چۆکلێتی ئۆدۆر'},
+    desc:{en:'Our own Odor chocolate drink.', ar:'مشروب الشوكولاتة الخاص بأودور.', ku:'خواردنەوەی چۆکلێتی تایبەتی ئۆدۆر.'},
+    price:3000, art:'mocha', image:'', tags:['signature'], available:true },
+
+  { id:'hot-chocolate', category:'hot',
+    name:{en:'Hot Chocolate', ar:'شوكولاتة ساخنة', ku:'چۆکلێتی گەرم'},
+    desc:{en:'Rich chocolate with steamed milk.', ar:'شوكولاتة غنية مع حليب مبخّر.', ku:'چۆکلێتی چڕ لەگەڵ شیری گەرم.'},
+    price:5000, art:'mocha', image:'', tags:[], available:true },
+
+  { id:'nescafe', category:'hot',
+    name:{en:'Nescafé', ar:'نسكافيه', ku:'نێسکافێ'},
+    desc:{en:'Classic Nescafé, served hot.', ar:'نسكافيه كلاسيكي يُقدَّم ساخناً.', ku:'نێسکافێی کلاسیک، بە گەرمی.'},
+    price:5000, art:'mug', image:'', tags:[], available:true },
+
+  { id:'espresso', category:'hot',
+    name:{en:'Espresso', ar:'إسبريسو', ku:'ئێسپرێسۆ'},
+    desc:{en:'A short, strong shot of espresso.', ar:'جرعة إسبريسو قصيرة وقوية.', ku:'شۆتێکی کورت و بەهێزی ئێسپرێسۆ.'},
+    price:2000, art:'espresso', image:'', tags:[], available:true },
+
+  { id:'caffe-latte', category:'hot',
+    name:{en:'Caffè Latte', ar:'كافيه لاتيه', ku:'کافێ لاتێ'},
+    desc:{en:'Espresso with steamed milk and a light layer of foam.', ar:'إسبريسو مع حليب مبخّر وطبقة خفيفة من الرغوة.', ku:'ئێسپرێسۆ لەگەڵ شیری گەرم و چینێکی تەنکی کەف.'},
+    price:5500, art:'latte', image:'', tags:[], available:true },
+
+  { id:'spanish-latte', category:'hot',
+    name:{en:'Spanish Latte', ar:'سبانش لاتيه', ku:'سپانیش لاتێ'},
+    desc:{en:'Espresso, milk and sweet condensed milk.', ar:'إسبريسو وحليب وحليب مكثّف محلّى.', ku:'ئێسپرێسۆ، شیر و شیری چڕکراوەی شیرین.'},
+    price:5750, art:'latte', image:'', tags:[], available:true },
+
+  { id:'cappuccino', category:'hot',
+    name:{en:'Cappuccino', ar:'كابتشينو', ku:'کاپوچینۆ'},
+    desc:{en:'Espresso, steamed milk and a thick layer of foam.', ar:'إسبريسو وحليب مبخّر وطبقة كثيفة من الرغوة.', ku:'ئێسپرێسۆ، شیری گەرم و چینێکی ئەستووری کەف.'},
+    price:5000, art:'cappuccino', image:'', tags:[], available:true },
+
+  { id:'turkish-coffee', category:'hot',
+    name:{en:'Turkish Coffee', ar:'قهوة تركية', ku:'قاوەی تورکی'},
+    desc:{en:'Finely ground coffee, slowly brewed the traditional way.', ar:'قهوة مطحونة ناعماً، تُحضَّر ببطء على الطريقة التقليدية.', ku:'قاوەی وردهاڕاو، بە هێواشی و بە شێوەی نەریتی لێنراو.'},
+    price:4000, art:'turkish', image:'', tags:[], available:true },
+
+  { id:'qazwan-coffee', category:'hot',
+    name:{en:'Qazwan Coffee', ar:'قهوة قزوان', ku:'قاوەی قەزوان'},
+    desc:{en:'Traditional Kurdish coffee made from roasted wild pistachio (terebinth).', ar:'قهوة كردية تقليدية من بذور البطم المحمّصة.', ku:'قاوەی نەریتی کوردی لە دانەی قەزوانی برژاو.'},
+    price:5000, art:'turkish', image:'', tags:[], available:true },
+
+  { id:'americano', category:'hot',
+    name:{en:'Americano', ar:'أمريكانو', ku:'ئەمریکانۆ'},
+    desc:{en:'American coffee: espresso topped with hot water.', ar:'قهوة أمريكية: إسبريسو مع ماء ساخن.', ku:'قاوەی ئەمریکی: ئێسپرێسۆ لەگەڵ ئاوی گەرم.'},
+    price:4500, art:'mug', image:'', tags:[], available:true },
+
+  /* ── Cold coffee ── */
+  { id:'iced-coffee', category:'iced',
+    name:{en:'Iced Coffee', ar:'قهوة مثلجة', ku:'ئایس کۆفی'},
+    desc:{en:'Chilled coffee served over ice.', ar:'قهوة باردة تُقدَّم مع الثلج.', ku:'قاوەی سارد لەگەڵ سەهۆڵ.'},
+    price:4000, art:'coldbrew', image:'', tags:[], available:true },
+
+  { id:'iced-latte', category:'iced',
+    name:{en:'Iced Latte', ar:'آيس لاتيه', ku:'ئایس لاتێ'},
+    desc:{en:'Espresso and cold milk over ice.', ar:'إسبريسو وحليب بارد مع الثلج.', ku:'ئێسپرێسۆ و شیری سارد لەگەڵ سەهۆڵ.'},
+    price:5500, art:'iced', image:'', tags:[], available:true },
+
+  { id:'iced-mocha', category:'iced',
+    name:{en:'Iced Mocha', ar:'آيس موكا', ku:'ئایس مۆکا'},
+    desc:{en:'Espresso, chocolate and cold milk over ice.', ar:'إسبريسو وشوكولاتة وحليب بارد مع الثلج.', ku:'ئێسپرێسۆ، چۆکلێت و شیری سارد لەگەڵ سەهۆڵ.'},
+    price:6000, art:'icedmocha', image:'', tags:[], available:true },
+
+  { id:'iced-spanish-latte', category:'iced',
+    name:{en:'Iced Spanish Latte', ar:'آيس سبانش لاتيه', ku:'ئایس سپانیش لاتێ'},
+    desc:{en:'Espresso, cold milk and sweet condensed milk over ice.', ar:'إسبريسو وحليب بارد وحليب مكثّف محلّى مع الثلج.', ku:'ئێسپرێسۆ، شیری سارد و شیری چڕکراوەی شیرین لەگەڵ سەهۆڵ.'},
+    price:6500, art:'iced', image:'', tags:[], available:true },
+
+  { id:'iced-americano', category:'iced',
+    name:{en:'Iced Americano', ar:'آيس أمريكانو', ku:'ئایس ئەمریکانۆ'},
+    desc:{en:'Espresso and cold water over ice.', ar:'إسبريسو وماء بارد مع الثلج.', ku:'ئێسپرێسۆ و ئاوی سارد لەگەڵ سەهۆڵ.'},
+    price:4500, art:'coldbrew', image:'', tags:[], available:true },
+
+  /* ── Cold drinks ── */
+  { id:'orange-juice', category:'juice',
+    name:{en:'Orange Juice', ar:'عصير برتقال', ku:'شەربەتی پرتەقاڵ'},
+    desc:{en:'Orange juice, served chilled.', ar:'عصير برتقال يُقدَّم بارداً.', ku:'شەربەتی پرتەقاڵ، بە ساردی.'},
+    price:5000, art:'juice', tint:'#E8913A', image:'', tags:[], available:true },
+
+  { id:'cherry-juice', category:'juice',
+    name:{en:'Cherry Juice', ar:'عصير كرز', ku:'شەربەتی گێلاس'},
+    desc:{en:'Sweet cherry juice, served chilled.', ar:'عصير كرز حلو يُقدَّم بارداً.', ku:'شەربەتی گێلاسی شیرین، بە ساردی.'},
+    price:5500, art:'glass', tint:'#A8283A', image:'', tags:[], available:true },
+
+  { id:'banana-juice', category:'juice',
+    name:{en:'Banana Juice', ar:'عصير موز', ku:'شەربەتی مۆز'},
+    desc:{en:'Smooth blended banana.', ar:'موز مخفوق بقوام ناعم.', ku:'مۆزی تێکەڵکراو بە چێژێکی نەرم.'},
+    price:5000, art:'smoothie', tint:'#EBD27A', image:'', tags:[], available:true },
+
+  { id:'banana-milk', category:'juice',
+    name:{en:'Banana & Milk', ar:'موز بالحليب', ku:'مۆز و شیر'},
+    desc:{en:'Banana blended with cold milk.', ar:'موز مخفوق مع حليب بارد.', ku:'مۆز تێکەڵ لەگەڵ شیری سارد.'},
+    price:6000, art:'smoothie', tint:'#F3E6B8', image:'', tags:[], available:true },
+
+  { id:'strawberry-juice', category:'juice',
+    name:{en:'Strawberry Juice', ar:'عصير فراولة', ku:'شەربەتی شلیک'},
+    desc:{en:'Strawberry juice, served chilled.', ar:'عصير فراولة يُقدَّم بارداً.', ku:'شەربەتی شلیک، بە ساردی.'},
+    price:5000, art:'glass', tint:'#D8394E', image:'', tags:[], available:true },
+
+  { id:'strawberry-milk', category:'juice',
+    name:{en:'Strawberry & Milk', ar:'فراولة بالحليب', ku:'شلیک و شیر'},
+    desc:{en:'Strawberries blended with cold milk.', ar:'فراولة مخفوقة مع حليب بارد.', ku:'شلیک تێکەڵ لەگەڵ شیری سارد.'},
+    price:6000, art:'smoothie', tint:'#F2A7B4', image:'', tags:[], available:true },
+
+  { id:'watermelon-juice', category:'juice',
+    name:{en:'Watermelon Juice', ar:'عصير رقي', ku:'شەربەتی شووتی'},
+    desc:{en:'Cool, refreshing watermelon.', ar:'رقي بارد ومنعش.', ku:'شووتی سارد و فێنک.'},
+    price:6000, art:'glass', tint:'#E45064', image:'', tags:[], available:true },
+
+  { id:'melon-juice', category:'juice',
+    name:{en:'Melon Juice', ar:'عصير شمام', ku:'شەربەتی کاڵەک'},
+    desc:{en:'Sweet, refreshing melon.', ar:'شمام حلو ومنعش.', ku:'کاڵەکی شیرین و فێنک.'},
+    price:5500, art:'glass', tint:'#EDBE73', image:'', tags:[], available:true },
+
+  { id:'melon-banana', category:'juice',
+    name:{en:'Melon & Banana', ar:'شمام وموز', ku:'کاڵەک و مۆز'},
+    desc:{en:'Melon and banana blended together.', ar:'شمام وموز مخفوقان معاً.', ku:'کاڵەک و مۆز پێکەوە تێکەڵکراو.'},
+    price:6000, art:'smoothie', tint:'#EFD08A', image:'', tags:[], available:true },
+
+  { id:'mango-juice', category:'juice',
+    name:{en:'Mango Juice', ar:'عصير مانجو', ku:'شەربەتی مانگۆ'},
+    desc:{en:'Smooth, sweet mango.', ar:'مانجو حلو بقوام ناعم.', ku:'مانگۆی شیرین و نەرم.'},
+    price:5500, art:'glass', tint:'#F2B33D', image:'', tags:[], available:true },
+
+  { id:'pomegranate-juice', category:'juice',
+    name:{en:'Pomegranate Juice', ar:'عصير رمان', ku:'شەربەتی هەنار'},
+    desc:{en:'Rich pomegranate juice, served chilled.', ar:'عصير رمان غني يُقدَّم بارداً.', ku:'شەربەتی هەناری چڕ، بە ساردی.'},
+    price:6500, art:'glass', tint:'#9B1D33', image:'', tags:[], available:true },
+
+  { id:'avocado-juice', category:'juice',
+    name:{en:'Avocado Juice', ar:'عصير أفوكادو', ku:'شەربەتی ئەڤۆکادۆ'},
+    desc:{en:'Creamy blended avocado.', ar:'أفوكادو مخفوق بقوام كريمي.', ku:'ئەڤۆکادۆی تێکەڵکراو بە چێژێکی کرێمی.'},
+    price:6500, art:'smoothie', tint:'#A9C46C', image:'', tags:[], available:true },
+];
+
+/* Category icons: Odor's own drawings (hot cup, iced glass, juice) */
+const CAT_SVG = {
+  hot:   '<svg class="cat-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3.5c0 1.5-1.5 1.5-1.5 3s1.5 1.5 1.5 3"/><path d="M16 2.5c0 1.5-1.5 1.5-1.5 3s1.5 1.5 1.5 3"/><path d="M21 3.5c0 1.5-1.5 1.5-1.5 3s1.5 1.5 1.5 3"/><path d="M4 13h24v5.5a8.5 8.5 0 0 1-8.5 8.5h-7A8.5 8.5 0 0 1 4 18.5V13z"/><path d="M28 15h1.5a3 3 0 0 1 0 6H28"/><path d="M2 29h28"/></svg>',
+  iced:  '<svg class="cat-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 2.5L19 12"/><path d="M8 5.5h16l-1.5 22a2 2 0 0 1-2 1.8h-9a2 2 0 0 1-2-1.8L8 5.5z"/><rect x="12" y="9" width="4" height="4" rx="0.8"/><rect x="17.5" y="12" width="3.5" height="3.5" rx="0.8"/><rect x="11.5" y="16" width="3.5" height="3.5" rx="0.8"/><rect x="16.5" y="18.5" width="3" height="3" rx="0.8"/></svg>',
+  juice: '<svg class="cat-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3l-3.5 10"/><path d="M23 3c1.5 0 2.5 1 2.5 2.5S24.5 8 23 8"/><path d="M6 8h20l-2 20a2 2 0 0 1-2 1.8H10a2 2 0 0 1-2-1.8L6 8z"/><path d="M6.6 14.5h18.8"/><circle cx="13" cy="19" r="1.2"/><circle cx="18.5" cy="22" r="1"/><circle cx="15" cy="24.5" r="0.9"/><circle cx="20.5" cy="17" r="0.9"/></svg>',
+};
+
+const CATEGORIES = [
+  { id:'all',   labelKey:'catAll',   icon:'layout-grid' },
+  { id:'hot',   labelKey:'catHot',   svg: CAT_SVG.hot   },
+  { id:'iced',  labelKey:'catIced',  svg: CAT_SVG.iced  },
+  { id:'juice', labelKey:'catJuice', svg: CAT_SVG.juice },
+];
+
+const GRID_SECTIONS = [
+  { id:'hot',   labelKey:'catHot'   },
+  { id:'iced',  labelKey:'catIced'  },
+  { id:'juice', labelKey:'catJuice' },
+];
+
+const TAG_STYLES = {
+  signature: { emoji:'⭐', labelKey:'tagSignature', cls:'bg-black/45 text-white ring-white/25' },
+  new:       { emoji:'✨', labelKey:'tagNew',       cls:'bg-black/45 text-white ring-white/25' },
+  vegan:     { emoji:'🌱', labelKey:'tagVegan',     cls:'bg-emerald-600/45 text-white ring-emerald-400/40' },
+};
+
+/* Drawings for drinks without a photo (viewBox 0 0 120 120, drawn in the theme's gold / bronze) */
+const ART = {
+  latte:
+    '<path class="steam" d="M48 36c-5-6 5-9 0-16"/><path class="steam" d="M60 32c-5-6 5-9 0-16"/><path class="steam" d="M72 36c-5-6 5-9 0-16"/>' +
+    '<ellipse class="soft" cx="60" cy="98" rx="42" ry="6"/><ellipse cx="60" cy="98" rx="42" ry="6"/>' +
+    '<path d="M28 50h64v14a30 30 0 0 1-30 30h-4a30 30 0 0 1-30-30z"/><path d="M92 56h5a10 10 0 0 1 0 20h-7"/>' +
+    '<ellipse cx="60" cy="50" rx="32" ry="6.5"/>' +
+    '<path class="solid" d="M60 54.6c-2.6-3.3-8.2-2-7.4 1.2.8 3 7.4 4.4 7.4 4.4s6.6-1.4 7.4-4.4c.8-3.2-4.8-4.5-7.4-1.2z" opacity=".75"/>',
+  espresso:
+    '<path class="steam" d="M54 46c-4-5 4-8 0-13"/><path class="steam" d="M66 46c-4-5 4-8 0-13"/>' +
+    '<ellipse class="soft" cx="60" cy="92" rx="34" ry="5"/><ellipse cx="60" cy="92" rx="34" ry="5"/>' +
+    '<path d="M38 58h44v8a22 22 0 0 1-22 22 22 22 0 0 1-22-22z"/><path d="M82 62h3a8 8 0 0 1 0 16h-6"/>' +
+    '<ellipse class="soft" cx="60" cy="58" rx="22" ry="4.5" style="opacity:.45"/><ellipse cx="60" cy="58" rx="22" ry="4.5"/>' +
+    '<g transform="translate(22 96) rotate(-25)"><ellipse class="solid" rx="7" ry="4.6" opacity=".8"/></g><g transform="translate(98 98) rotate(20)"><ellipse class="solid" rx="6" ry="4" opacity=".6"/></g>',
+  mocha:
+    '<path class="steam" d="M50 30c-5-6 5-9 0-15"/><path class="steam" d="M66 30c-5-6 5-9 0-15"/>' +
+    '<path d="M34 40h52l-5 56a7 7 0 0 1-7 6.5H46a7 7 0 0 1-7-6.5z"/><path d="M86 52h4a9 9 0 0 1 0 18h-6"/>' +
+    '<path class="soft" d="M36.5 66h47l-2.8 30a7 7 0 0 1-7 6.5H46.3a7 7 0 0 1-7-6.5z" style="opacity:.32"/><path class="soft" d="M35.4 52h49.2l-1.1 14h-47z"/>' +
+    '<path d="M35.6 52h48.8M36.6 66h46.8"/>' +
+    '<circle class="solid" cx="48" cy="44" r="1.4"/><circle class="solid" cx="58" cy="46" r="1.4"/><circle class="solid" cx="68" cy="43.5" r="1.4"/><circle class="solid" cx="74" cy="46.5" r="1.2"/><circle class="solid" cx="53" cy="47.5" r="1"/>',
+  iced:
+    '<path d="M72 10l-9 36"/><path d="M36 30h48l-6 66a6 6 0 0 1-6 5.5H48a6 6 0 0 1-6-5.5z"/>' +
+    '<path class="soft" d="M38.4 58h43.2l-3.6 38a6 6 0 0 1-6 5.5H48a6 6 0 0 1-6-5.5z" style="opacity:.3"/><path d="M38.4 58c7-3 14 3 21.6 0s14.6 3 21.6 0"/>' +
+    '<rect x="44" y="38" width="12" height="12" rx="2.5" transform="rotate(-10 50 44)"/><rect x="60" y="44" width="11" height="11" rx="2.5" transform="rotate(12 65 50)"/><rect x="48" y="64" width="10" height="10" rx="2.5" transform="rotate(8 53 69)"/>',
+  coldbrew:
+    '<path d="M40 22h40"/><path d="M42 22l-2 8h40l-2-8"/><path d="M40 30h40l-3 68a6 6 0 0 1-6 5.5H49a6 6 0 0 1-6-5.5z"/>' +
+    '<path class="soft" d="M41 44h38l-2.5 54a6 6 0 0 1-6 5.5H49.5a6 6 0 0 1-6-5.5z" style="opacity:.4"/>' +
+    '<path d="M52 44c0 10 6 12 6 22s-5 12-5 20M64 44c0 8-4 12-4 20s5 10 5 18" class="steam"/>' +
+    '<rect x="46" y="34" width="9" height="9" rx="2" transform="rotate(-8 50 38)"/><rect x="62" y="35" width="8" height="8" rx="2" transform="rotate(10 66 39)"/>',
+  icedmocha:
+    '<path d="M70 6l-7 26"/><path d="M42 34c-2-9 8-13 12-8 3-8 15-8 16 0 6-4 13 2 9 8"/><path d="M38 34h46l-6 62a6 6 0 0 1-6 5.5H50a6 6 0 0 1-6-5.5z"/>' +
+    '<path class="soft" d="M39.3 50h43.4l-4.7 46a6 6 0 0 1-6 5.5H50a6 6 0 0 1-6-5.5z" style="opacity:.35"/>' +
+    '<path d="M40 48c4 6 8-4 12 2s8-4 12 2 8-4 12 2 6-4 7-6"/>' +
+    '<rect x="48" y="58" width="10" height="10" rx="2.5" transform="rotate(-10 53 63)"/><rect x="62" y="66" width="10" height="10" rx="2.5" transform="rotate(14 67 71)"/>',
+  mug:
+    '<path class="steam" d="M50 30c-5-6 5-9 0-15"/><path class="steam" d="M66 30c-5-6 5-9 0-15"/>' +
+    '<path d="M36 40h44v50a10 10 0 0 1-10 10H46a10 10 0 0 1-10-10z"/><path d="M80 52h5a10 10 0 0 1 0 20h-5"/>' +
+    '<path class="soft" d="M36.5 48h43v42a9.5 9.5 0 0 1-9.5 9.5H46a9.5 9.5 0 0 1-9.5-9.5z" style="opacity:.32"/><path d="M36 48h44"/>',
+  cappuccino:
+    '<path class="steam" d="M52 30c-4-5 4-8 0-13"/><path class="steam" d="M68 30c-4-5 4-8 0-13"/>' +
+    '<ellipse class="soft" cx="60" cy="98" rx="40" ry="6"/><ellipse cx="60" cy="98" rx="40" ry="6"/>' +
+    '<path d="M30 58h60v8a30 30 0 0 1-30 30 30 30 0 0 1-30-30z"/><path d="M90 64h5a9 9 0 0 1 0 18h-7"/>' +
+    '<path class="soft" d="M30 58c2-12 15-18 30-18s28 6 30 18z"/><path d="M30 58c2-12 15-18 30-18s28 6 30 18"/>' +
+    '<circle class="solid" cx="50" cy="50" r="1.4"/><circle class="solid" cx="60" cy="46" r="1.4"/><circle class="solid" cx="70" cy="50" r="1.4"/><circle class="solid" cx="55" cy="53" r="1.1"/><circle class="solid" cx="65" cy="53" r="1.1"/>',
+  turkish:
+    '<path class="steam" d="M78 66c-3-4 3-6 0-10"/><path class="steam" d="M86 66c-3-4 3-6 0-10"/>' +
+    '<path d="M30 40h26l-3 9 6 30a9 9 0 0 1-9 10H36a9 9 0 0 1-9-10l6-30z"/><path d="M28 40l-4-3"/><path d="M57 50l32-18"/><path d="M89 32l5-3"/>' +
+    '<path class="soft" d="M31.2 58h23.6l3.9 21.2a8 8 0 0 1-8 9.3H35.3a8 8 0 0 1-8-9.3z"/>' +
+    '<path d="M70 72h24v4a12 12 0 0 1-12 12 12 12 0 0 1-12-12z"/><path d="M66 92h32"/><ellipse class="soft" cx="82" cy="72" rx="12" ry="2.4" style="opacity:.5"/>',
+  glass:
+    '<path d="M70 10l-8 28"/><path d="M38 34h44l-6 62a6 6 0 0 1-6 5.5H50a6 6 0 0 1-6-5.5z"/>' +
+    '<path class="tint" d="M39.4 48h41.2l-4.6 48a6 6 0 0 1-6 5.5H50a6 6 0 0 1-6-5.5z"/><path d="M39.4 48h41.2"/>' +
+    '<rect x="46" y="52" width="11" height="11" rx="2.5" transform="rotate(-10 51 57)"/>' +
+    '<circle cx="64" cy="66" r="1.5"/><circle cx="54" cy="78" r="1.8"/><circle cx="66" cy="86" r="1.3"/>',
+  smoothie:
+    '<path d="M68 8l-6 30"/><path d="M36 30h48l-4 66a8 8 0 0 1-8 7.5H48a8 8 0 0 1-8-7.5z"/>' +
+    '<path class="tint" d="M37.3 52h45.4l-2.7 44a8 8 0 0 1-8 7.5H48a8 8 0 0 1-8-7.5z" style="opacity:.7"/>' +
+    '<path class="soft" d="M36.6 40h46.8l-.7 12H37.3z"/><path d="M37.3 52c5-3 10 3 15 0s10 3 15 0 10 3 15.4 0"/>' +
+    '<circle cx="52" cy="72" r="1.6"/><circle cx="66" cy="84" r="1.4"/>',
+  juice:
+    '<path d="M50 8l6 30"/><circle cx="84" cy="34" r="13"/><path class="tint" d="M84 21a13 13 0 0 1 0 26z"/><path d="M84 21v26M72 30l24 8M72 38l24-8"/>' +
+    '<path d="M34 34h46l-6 62a6 6 0 0 1-6 5.5H46a6 6 0 0 1-6-5.5z"/>' +
+    '<path class="tint" d="M35.6 48h42.8l-4.6 48a6 6 0 0 1-6 5.5H46.2a6 6 0 0 1-6-5.5z"/><path d="M35.6 48h42.8"/>' +
+    '<circle cx="48" cy="64" r="1.6"/><circle cx="60" cy="74" r="1.3"/><circle cx="52" cy="86" r="1.8"/><circle cx="66" cy="60" r="1.2"/>',
+};
+
+/* Slides: words over a gold drawing. To use a photo instead, add src:'image/slide1.webp'. */
+const HERO_SLIDES = [
+  { art:'cup', glowX:'72%',
+    tag:  { en:'Freshly made', ar:'يُحضَّر طازجاً', ku:'تازە ئامادەکراو' },
+    title:{ en:'The art of the perfect cup', ar:'فنّ الفنجان المثالي', ku:'هونەری کوپێکی تەواو' },
+    text: { en:'Every cup is made fresh, just the way you like it.', ar:'كل فنجان يُحضَّر طازجاً، كما تحبّه تماماً.', ku:'هەموو کوپێک تازە ئامادە دەکرێت، هەر وەک خۆت حەزی لێیە.' } },
+  { art:'branch', glowX:'30%',
+    tag:  { en:'Coffee & more', ar:'قهوة وأكثر', ku:'قاوە و زیاتر' },
+    title:{ en:'From espresso to Qazwan', ar:'من الإسبريسو إلى القزوان', ku:'لە ئێسپرێسۆوە بۆ قەزوان' },
+    text: { en:'Classic coffees, Turkish coffee and Kurdish Qazwan, all in one place.', ar:'قهوة كلاسيكية، وقهوة تركية، وقهوة القزوان الكردية، في مكان واحد.', ku:'قاوەی کلاسیک، قاوەی تورکی و قاوەی قەزوانی کوردی، هەمووی لە یەک شوێن.' } },
+  { art:'juice', glowX:'65%',
+    tag:  { en:'Fresh & cold', ar:'طازج وبارد', ku:'تازە و سارد' },
+    title:{ en:'Cold drinks for warm days', ar:'مشروبات باردة لأيام دافئة', ku:'خواردنەوەی سارد بۆ ڕۆژە گەرمەکان' },
+    text: { en:'Orange, strawberry, mango, avocado and more, made when you order.', ar:'برتقال، فراولة، مانجو، أفوكادو والمزيد، تُحضَّر عند طلبك.', ku:'پرتەقاڵ، شلیک، مانگۆ، ئەڤۆکادۆ و زیاتر، لە کاتی داواکردندا ئامادە دەکرێن.' } },
+  { art:'escape', glowX:'50%',
+    tag:  { en:'A space to breathe', ar:'مساحة للاسترخاء', ku:'شوێنێک بۆ پشوو' },
+    title:{ en:'Your daily escape', ar:'ملاذك اليومي', ku:'پەناگەی ڕۆژانەت' },
+    text: { en:'Warm light, good company and the aroma of fresh coffee.', ar:'إضاءة دافئة، صحبة جميلة، ورائحة القهوة الطازجة.', ku:'ڕووناکی گەرم، هاوڕێیەتیی خۆش و بۆنی قاوەی تازە.' } },
+];
+const HERO_INTERVAL_MS = 5000;
+
+/* Big slide drawings (viewBox 0 0 200 200) */
+const HERO_ART = {
+  cup:
+    '<path class="faint" d="M80 52c-8-10 8-15 0-27"/><path class="faint" d="M100 46c-8-10 8-15 0-27"/><path class="faint" d="M120 52c-8-10 8-15 0-27"/>' +
+    '<ellipse class="soft" cx="100" cy="162" rx="72" ry="10"/><ellipse cx="100" cy="162" rx="72" ry="10"/><ellipse class="faint" cx="100" cy="162" rx="52" ry="6"/>' +
+    '<path d="M46 80h108v24a52 52 0 0 1-52 52h-4a52 52 0 0 1-52-52z"/><path d="M154 90h9a17 17 0 0 1 0 34h-12"/>' +
+    '<ellipse cx="100" cy="80" rx="54" ry="11"/>' +
+    '<path class="solid" d="M100 88c-4.6-6-14.6-3.6-13.2 2.2 1.4 5.4 13.2 8 13.2 8s11.8-2.6 13.2-8c1.4-5.8-8.6-8.2-13.2-2.2z" opacity=".8"/>',
+  branch:
+    '<path d="M20 180C60 140 90 110 180 30"/><path class="faint" d="M60 140c-14-2-26 6-30 18 14 2 26-6 30-18z"/>' +
+    '<path d="M95 107c-4-16 4-30 18-34 4 16-4 30-18 34z"/><path class="soft" d="M95 107c-4-16 4-30 18-34 4 16-4 30-18 34z"/>' +
+    '<path d="M130 76c16-2 30 6 34 20-16 2-30-6-34-20z"/><path class="soft" d="M130 76c16-2 30 6 34 20-16 2-30-6-34-20z"/>' +
+    '<path d="M150 52c-2-16 8-28 22-30 2 16-8 28-22 30z"/>' +
+    '<circle cx="78" cy="132" r="9"/><circle class="soft" cx="78" cy="132" r="9"/><circle cx="92" cy="142" r="8"/><circle cx="112" cy="104" r="8"/><circle class="soft" cx="112" cy="104" r="8"/><circle cx="124" cy="116" r="7"/>' +
+    '<g transform="translate(46 70) rotate(-30)"><ellipse rx="13" ry="9"/><path d="M-12 0c6-4 18 4 24 0"/></g>',
+  juice:
+    '<path d="M104 18l-14 56"/><circle cx="146" cy="62" r="22"/><path class="soft" d="M146 40a22 22 0 0 1 0 44z"/><path d="M146 40v44M126 54l40 16M126 70l40-16"/>' +
+    '<path d="M56 62h84l-10 112a10 10 0 0 1-10 9H76a10 10 0 0 1-10-9z"/>' +
+    '<path class="soft" d="M58.2 86h79.6l-8 88a10 10 0 0 1-10 9H76.2a10 10 0 0 1-10-9z"/><path d="M58.2 86h79.6"/>' +
+    '<rect x="72" y="98" width="20" height="20" rx="4" transform="rotate(-10 82 108)"/><rect x="100" y="112" width="18" height="18" rx="4" transform="rotate(12 109 121)"/>' +
+    '<circle cx="84" cy="144" r="2.4"/><circle cx="110" cy="156" r="2"/><circle cx="98" cy="134" r="1.6"/>' +
+    '<path class="faint" d="M36 112c-6 8-6 14 0 16 6-2 6-8 0-16z"/><path class="faint" d="M28 140c-4 5-4 9 0 10 4-1 4-5 0-10z"/>',
+  escape:
+    '<path class="faint" d="M74 70c-12-14 12-22 0-40s12-26 0-40"/><path class="faint" d="M100 62c-12-14 12-22 0-40"/><path class="faint" d="M126 70c-12-14 12-22 0-40s12-26 0-40"/>' +
+    '<path d="M52 92h96v16a48 48 0 0 1-48 48 48 48 0 0 1-48-48z"/><path d="M148 100h8a15 15 0 0 1 0 30h-12"/>' +
+    '<ellipse cx="100" cy="92" rx="48" ry="9"/><ellipse class="soft" cx="100" cy="92" rx="48" ry="9"/>' +
+    '<path d="M36 170h128"/><path class="faint" d="M56 182h88"/>' +
+    '<path class="solid" d="M30 40l2.4 6.6L39 49l-6.6 2.4L30 58l-2.4-6.6L21 49l6.6-2.4z" opacity=".7"/><path class="solid" d="M172 120l1.6 4.4 4.4 1.6-4.4 1.6-1.6 4.4-1.6-4.4-4.4-1.6 4.4-1.6z" opacity=".6"/>',
+};
+
+const DAY_NAMES = {
+  en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  ar: ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],
+  ku: ['یەکشەممە','دووشەممە','سێشەممە','چوارشەممە','پێنجشەممە','هەینی','شەممە'],
+};
+
+const STORAGE_KEY = 'odor.menu.v1';
+const STORE_TZ = 'Asia/Baghdad';
+
+/* ====================================================================
+ * §2 — i18n DICTIONARY
+ * ==================================================================== */
+
+const I18N = {
+  en: {
+    htmlLang:'en', dir:'ltr', shortLabel:'EN', nativeName:'English',
+    brand:'ODOR Coffee', tagline:'Coffee, cold drinks & fresh juice', restaurant:'COFFEE & JUICE',
+    searchPlaceholder:'Search coffee, juice, latte…', clearSearch:'Clear search',
+    catAll:'All', catHot:'Hot Coffee', catIced:'Cold Coffee', catJuice:'Cold Drinks',
+    tagSignature:'Signature', tagNew:'New', tagVegan:'Plant-based',
+    noResults:'Nothing matches that', noResultsHint:'Try a different search or category.',
+    openMenu:'Menu',
+    menuTitle:'Our menu', menuSubtitle:'Brewed with care, served with soul.',
+    themeToDark:'Switch to dark mode', themeToLight:'Switch to light mode',
+    footerTagline:'Hot coffee, cold coffee and fresh juice, made with care.',
+    infoTitle:'Brewed for the senses',
+    infoText:'From a quick espresso to a cold juice on a warm day, everything is made with care. Thank you for stopping by.',
+    contactTitle:'Contact',
+    openingHours:'Opening Hours',
+    weeklySchedule:'Weekly schedule',
+    openNow:'Open Now',
+    closedNow:'Closed',
+    openDaily:'Open Daily',
+    hoursNote:'Times shown in Baghdad local time.',
+    callCta:'Call',
+    chatCta:'Chat',
+    directionsCta:'Directions',
+    rights:'All rights reserved.',
+    close:'Close', backToMenu:'Back to menu',
+    prevSlide:'Previous slide', nextSlide:'Next slide', home:'Back to the start',
+  },
+  ar: {
+    htmlLang:'ar', dir:'rtl', shortLabel:'ع', nativeName:'العربية',
+    brand:'أودور كوفي', tagline:'قهوة، مشروبات باردة وعصائر طازجة', restaurant:'قهوة وعصائر',
+    searchPlaceholder:'ابحث عن قهوة، عصير، لاتيه…', clearSearch:'مسح البحث',
+    catAll:'الكل', catHot:'قهوة ساخنة', catIced:'قهوة باردة', catJuice:'مشروبات باردة',
+    tagSignature:'مميّز', tagNew:'جديد', tagVegan:'نباتي',
+    noResults:'لا توجد نتائج مطابقة', noResultsHint:'جرّب بحثاً أو تصنيفاً آخر.',
+    openMenu:'القائمة',
+    menuTitle:'قائمتنا', menuSubtitle:'تُحضَّر بعناية، وتُقدَّم بشغف.',
+    themeToDark:'التبديل إلى الوضع الداكن', themeToLight:'التبديل إلى الوضع الفاتح',
+    footerTagline:'قهوة ساخنة، قهوة باردة وعصائر طازجة، تُحضَّر بعناية.',
+    infoTitle:'قهوة تُحضَّر للحواس',
+    infoText:'من إسبريسو سريع إلى عصير بارد في يوم دافئ، كل شيء يُحضَّر بعناية. شكراً لزيارتك.',
+    contactTitle:'تواصل معنا',
+    openingHours:'ساعات العمل',
+    weeklySchedule:'الجدول الأسبوعي',
+    openNow:'مفتوح الآن',
+    closedNow:'مغلق',
+    openDaily:'مفتوح يومياً',
+    hoursNote:'الأوقات حسب توقيت بغداد.',
+    callCta:'اتصال',
+    chatCta:'محادثة',
+    directionsCta:'الموقع',
+    rights:'جميع الحقوق محفوظة.',
+    close:'إغلاق', backToMenu:'العودة إلى القائمة',
+    prevSlide:'الشريحة السابقة', nextSlide:'الشريحة التالية', home:'العودة إلى البداية',
+  },
+  ku: {
+    htmlLang:'ckb', dir:'rtl', shortLabel:'ک', nativeName:'کوردی',
+    brand:'ئۆدۆر کۆفی', tagline:'قاوە، خواردنەوەی سارد و شەربەتی تازە', restaurant:'قاوە و شەربەت',
+    searchPlaceholder:'گەڕان بۆ قاوە، شەربەت، لاتێ…', clearSearch:'سڕینەوەی گەڕان',
+    catAll:'هەموو', catHot:'قاوەی گەرم', catIced:'قاوەی سارد', catJuice:'خواردنەوەی سارد',
+    tagSignature:'تایبەت', tagNew:'نوێ', tagVegan:'ڕووەکی',
+    noResults:'هیچ ئەنجامێک نەدۆزرایەوە', noResultsHint:'وشەیەکی تر یان بەشێکی تر تاقی بکەرەوە.',
+    openMenu:'مینیو',
+    menuTitle:'مینیوەکەمان', menuSubtitle:'بە وردی ئامادەکراو، بە دڵەوە پێشکەشکراو.',
+    themeToDark:'گۆڕین بۆ دۆخی تاریک', themeToLight:'گۆڕین بۆ دۆخی ڕووناک',
+    footerTagline:'قاوەی گەرم، قاوەی سارد و شەربەتی تازە، بە وردی ئامادەکراو.',
+    infoTitle:'بۆ هەستەکانت ئامادەکراوە',
+    infoText:'لە ئێسپرێسۆیەکی خێراوە تا شەربەتێکی سارد لە ڕۆژێکی گەرمدا، هەموو شتێک بە وردی ئامادە دەکرێت. سوپاس بۆ سەردانەکەت.',
+    contactTitle:'پەیوەندی',
+    openingHours:'کاتژمێری کارکردن',
+    weeklySchedule:'خشتەی هەفتانە',
+    openNow:'ئێستا کراوەیە',
+    closedNow:'داخراوە',
+    openDaily:'ڕۆژانە کراوەیە',
+    hoursNote:'کاتەکان بە کاتی بەغدا نیشان دراون.',
+    callCta:'پەیوەندیکردن',
+    chatCta:'چات',
+    directionsCta:'نەخشە',
+    rights:'هەموو مافەکان پارێزراون.',
+    close:'داخستن', backToMenu:'گەڕانەوە بۆ مینیو',
+    prevSlide:'سلایدی پێشوو', nextSlide:'سلایدی دواتر', home:'گەڕانەوە بۆ سەرەتا',
+  },
+};
+
+const NUMBER_LOCALE   = { en:'en-IQ', ar:'ar-IQ', ku:'ckb-IQ' };
+const CURRENCY_SUFFIX = { en:'IQD',   ar:'د.ع',   ku:'د.ع'   };
+
+/* ====================================================================
+ * §3 — UTILITIES
+ * ==================================================================== */
+
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;',
+  }[c]));
+}
+
+const _nfCache = new Map();
+function getNumberFormat(locale) {
+  let nf = _nfCache.get(locale);
+  if (nf) return nf;
+  try { nf = new Intl.NumberFormat(NUMBER_LOCALE[locale] || 'en-IQ', { maximumFractionDigits: 0 }); }
+  catch { nf = new Intl.NumberFormat('en-IQ', { maximumFractionDigits: 0 }); }
+  _nfCache.set(locale, nf);
+  return nf;
+}
+
+function formatNumber(value, locale) {
+  return getNumberFormat(locale || state.locale).format(value);
+}
+
+function formatPrice(amount, locale) {
+  const l = locale || state.locale;
+  return formatNumber(amount, l) + ' ' + CURRENCY_SUFFIX[l];
+}
+
+function tx(obj, locale) {
+  const l = locale || state.locale;
+  if (!obj) return '';
+  return obj[l] || obj.en || '';
+}
+
+function storageGet(key) {
+  try { return window.localStorage.getItem(key); }
+  catch { return null; }
+}
+
+function storageSet(key, value) {
+  try { window.localStorage.setItem(key, value); }
+  catch { /* private mode / quota */ }
+}
+
+// Small versions of photos can live in image/thumb/ (same name); without one the full photo is used
+function thumbSrc(src) { return String(src); }
+
+// '08:00' → minutes after midnight ('00:00' as a closing time means midnight = 1440)
+function toMinutes(hhmm, isClose) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
+  if (!m) return null;
+  const v = Number(m[1]) * 60 + Number(m[2]);
+  return isClose && v === 0 ? 24 * 60 : v;
+}
+// minutes → '8:00 AM'
+function clock12(min) {
+  const h24 = Math.floor(min / 60) % 24, mm = String(min % 60).padStart(2, '0');
+  const h = h24 % 12 || 12;
+  return h + ':' + mm + ' ' + (h24 < 12 ? 'AM' : 'PM');
+}
+function hasHours() { return toMinutes(STORE.hours.open) !== null && toMinutes(STORE.hours.close, true) !== null; }
+function hoursRangeText() { return clock12(toMinutes(STORE.hours.open)) + ' – ' + clock12(toMinutes(STORE.hours.close, true)); }
+
+/* ====================================================================
+ * §4 — STATE
+ * ==================================================================== */
+
+const state = {
+  locale: 'en',
+  theme: 'dark',
+  activeCategory: 'all',
+  search: '',
+  openItemId: null,
+  introVisible: true,
+  isOpen: false,
+};
+
+let _sectionObserver = null;
+let _scrollSpySuspendedUntil = 0;
+
+function persist() {
+  storageSet(STORAGE_KEY, JSON.stringify({ locale: state.locale, theme: state.theme }));
+}
+
+function restore() {
+  const raw = storageGet(STORAGE_KEY);
+  if (!raw) return;
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch { return; }
+  if (!parsed || typeof parsed !== 'object') return;
+  if (parsed.locale && I18N[parsed.locale]) state.locale = parsed.locale;
+  if (parsed.theme === 'dark' || parsed.theme === 'light') state.theme = parsed.theme;
+}
+
+function findItem(itemId) { return MENU.find((m) => m.id === itemId) || null; }
+
+/* ====================================================================
+ * §5 — SHOP DETAILS ON THE PAGE (links, address, hours)
+ * ==================================================================== */
+
+function linkFor(key) {
+  if (key === 'phone') return STORE.phone ? 'tel:' + STORE.phone.replace(/[^\d+]/g, '') : '';
+  return STORE[key] || '';
+}
+
+// Fill every [data-link] from STORE; hide the ones that are still empty
+function applyStoreDetails() {
+  document.querySelectorAll('[data-link]').forEach((el) => {
+    const url = linkFor(el.getAttribute('data-link'));
+    if (el.id === 'addressLink') return;          // handled below (it shows even without a map link)
+    if (url) { el.setAttribute('href', url); el.classList.remove('hidden'); }
+    else { el.removeAttribute('href'); el.classList.add('hidden'); }
+  });
+  document.querySelectorAll('.social-row').forEach((row) => {
+    row.classList.toggle('hidden', !row.querySelector('[data-link]:not(.hidden)'));
+  });
+  const actions = $('infoActions');
+  if (actions) actions.classList.toggle('hidden', !actions.querySelector('[data-link]:not(.hidden)'));
+
+  const lines = (STORE.address && (STORE.address[state.locale] || STORE.address.en)) || ['', ''];
+  const l1 = lines[0] || (STORE.address && STORE.address.en && STORE.address.en[0]) || '';
+  const l2 = lines[1] || (STORE.address && STORE.address.en && STORE.address.en[1]) || '';
+  $('addressLine1').textContent = l1;
+  $('addressLine2').textContent = l2;
+  const addr = $('addressLink');
+  if (STORE.maps) addr.setAttribute('href', STORE.maps); else addr.removeAttribute('href');
+  addr.classList.toggle('hidden', !l1 && !l2);
+  $('phoneText').textContent = STORE.phone ? prettyPhone(STORE.phone) : '';
+  $('contactBlock').classList.toggle('hidden', !l1 && !l2 && !STORE.phone);
+
+  $('hoursBlock').classList.toggle('hidden', !hasHours());
+  if (hasHours()) $('hoursRange').textContent = hoursRangeText();
+}
+
+// '+9647501234567' → '+964 750 123 4567'
+function prettyPhone(p) {
+  const d = String(p).replace(/[^\d+]/g, '');
+  const m = /^\+964(\d{3})(\d{3})(\d{4})$/.exec(d);
+  return m ? '+964 ' + m[1] + ' ' + m[2] + ' ' + m[3] : d;
+}
+
+/* ====================================================================
+ * §6 — BUSINESS HOURS
+ * ==================================================================== */
+
+function getStoreTimeParts() {
+  try {
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: STORE_TZ,
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false,
+    });
+    const parts = fmt.formatToParts(new Date());
+    const rawHour = parseInt(parts.find((p) => p.type === 'hour').value, 10);
+    const minute  = parseInt(parts.find((p) => p.type === 'minute').value, 10);
+    const hour = (Number.isFinite(rawHour) ? rawHour : 0) % 24;
+    return { hour, minute: Number.isFinite(minute) ? minute : 0 };
+  } catch {
+    const d = new Date();
+    return { hour: d.getHours(), minute: d.getMinutes() };
+  }
+}
+
+function computeIsOpenNow() {
+  if (!hasHours()) return false;
+  const { hour, minute } = getStoreTimeParts();
+  const now = hour * 60 + minute;
+  const open = toMinutes(STORE.hours.open), close = toMinutes(STORE.hours.close, true);
+  // open past midnight (e.g. 16:00 – 02:00)
+  return close > open ? (now >= open && now < close) : (now >= open || now < close);
+}
+
+function renderOpenStatus() {
+  const badge = $('openNowBadge');
+  const label = $('openNowLabel');
+  if (!badge || !label) return;
+
+  if (state.isOpen) {
+    badge.className =
+      'inline-flex shrink-0 items-center gap-1 rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-bold text-white ring-1 ring-white/40';
+    label.textContent = t('openNow');
+  } else {
+    badge.className =
+      'inline-flex shrink-0 items-center gap-1 rounded-full bg-black/25 px-2 py-0.5 text-[10px] font-bold text-white ring-1 ring-white/30';
+    label.textContent = t('closedNow');
+  }
+}
+
+function refreshOpenStatus() {
+  state.isOpen = computeIsOpenNow();
+  renderOpenStatus();
+}
+
+/* ====================================================================
+ * §7 — RENDERERS
+ * ==================================================================== */
+
+const $ = (id) => document.getElementById(id);
+
+function t(key) { return (I18N[state.locale] && I18N[state.locale][key]) || I18N.en[key] || key; }
+
+function refreshIcons() {
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    try { window.lucide.createIcons(); } catch { /* ignore */ }
+  }
+}
+
+function applyTheme(theme) {
+  state.theme = (theme === 'light') ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', state.theme);
+
+  const meta = $('themeColorMeta');
+  if (meta) meta.setAttribute('content', state.theme === 'dark' ? '#120E0A' : '#F6F1E9');
+
+  renderThemeToggles();
+  refreshIcons();
+}
+
+function renderThemeToggles() {
+  const isDark = state.theme === 'dark';
+  const iconName = isDark ? 'sun' : 'moon';
+  const labelKey = isDark ? 'themeToLight' : 'themeToDark';
+  const html = '<i data-lucide="' + iconName + '" class="h-5 w-5"></i>';
+
+  [$('themeToggle'), $('introThemeToggle')].forEach((btn) => {
+    if (!btn) return;
+    btn.innerHTML = html;
+    btn.setAttribute('aria-label', t(labelKey));
+    btn.setAttribute('title', t(labelKey));
+  });
+}
+
+function toggleTheme() {
+  applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+  persist();
+}
+
+function showIntro() {
+  state.introVisible = true;
+  document.body.classList.add('intro-active');
+  $('introScreen').classList.remove('intro-hidden');
+  document.body.style.overflow = 'hidden';
+  window.scrollTo(0, 0);
+}
+function hideIntro() {
+  state.introVisible = false;
+  document.body.classList.remove('intro-active');
+  $('introScreen').classList.add('intro-hidden');
+  document.body.style.overflow = '';
+}
+
+function applyLocale() {
+  const cfg = I18N[state.locale] || I18N.en;
+  const html = document.documentElement;
+
+  html.setAttribute('lang', cfg.htmlLang);
+  html.setAttribute('dir', cfg.dir);
+  html.setAttribute('data-locale', state.locale);
+
+  const mt = $('menuTitle'); if (mt) mt.textContent = cfg.menuTitle;
+  const ms = $('menuSubtitle'); if (ms) ms.textContent = cfg.menuSubtitle;
+  const et = $('emptyTitle'); if (et) et.textContent = cfg.noResults;
+  const eh = $('emptyHint'); if (eh) eh.textContent = cfg.noResultsHint;
+
+  const input = $('searchInput');
+  if (input) {
+    input.placeholder = cfg.searchPlaceholder;
+    input.setAttribute('aria-label', cfg.searchPlaceholder);
+  }
+  const sc = $('searchClear'); if (sc) sc.setAttribute('aria-label', cfg.clearSearch);
+  const hbtn = $('homeBtn'); if (hbtn) hbtn.setAttribute('aria-label', cfg.home);
+  const hp = $('heroPrev'); if (hp) hp.setAttribute('aria-label', cfg.prevSlide);
+  const hn = $('heroNext'); if (hn) hn.setAttribute('aria-label', cfg.nextSlide);
+
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    if (!key) return;
+    const val = (I18N[state.locale] && I18N[state.locale][key]) || I18N.en[key];
+    if (typeof val === 'string') el.textContent = val;
+  });
+
+  renderLangSwitcher();
+  renderThemeToggles();
+  renderTabs();
+  renderGrid();
+  renderHeroSlider();
+  applyStoreDetails();
+  renderHoursList();
+  renderOpenStatus();
+  if (state.openItemId) renderModal();
+  refreshIcons();
+}
+
+/* ── Language switcher ── */
+const GLOBE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+const CHECK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+const CHEVRON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lang-chevron text-muted"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+function renderLangSwitcher() {
+  const current = state.locale;
+  const codes = Object.keys(I18N);
+
+  const build = (container, isIntro) => {
+    if (!container) return;
+    const triggerBg = isIntro ? 'bg-surface/85 backdrop-blur ring-edge/10' : 'bg-surface ring-edge/5';
+
+    const itemsHtml = codes.map((code) => {
+      const cfg = I18N[code];
+      const isActive = code === current;
+      return (
+        '<button type="button" class="lang-item group flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-start transition ' +
+          (isActive ? 'bg-accent/10' : 'hover:bg-edge/5') + '" ' +
+          'data-lang-code="' + esc(code) + '" role="option" aria-selected="' + (isActive ? 'true' : 'false') + '">' +
+          '<span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-xs font-extrabold ' +
+            (isActive ? 'bg-brand text-white' : 'bg-surfaceAlt text-ink group-hover:bg-accent/15 group-hover:text-accent') + '">' +
+            esc(cfg.shortLabel) +
+          '</span>' +
+          '<span class="min-w-0 flex-1">' +
+            '<span class="block truncate text-sm font-semibold ' + (isActive ? 'text-accent' : 'text-ink') + '" dir="' + esc(cfg.dir) + '">' + esc(cfg.nativeName) + '</span>' +
+            '<span class="block text-[10px] font-bold uppercase tracking-wider text-muted">' + esc(cfg.htmlLang) + '</span>' +
+          '</span>' +
+          (isActive ? '<span class="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-brand text-white">' + CHECK_SVG + '</span>' : '') +
+        '</button>'
+      );
+    }).join('');
+
+    // Header uses a compact trigger (globe + short code); the intro screen keeps the full name
+    const triggerHtml = isIntro
+      ? '<button type="button" class="lang-trigger flex h-10 items-center gap-2 rounded-xl ps-1.5 pe-3 ring-1 transition hover:ring-gold/50 ' + triggerBg + '" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">' +
+          '<span class="grid h-7 w-7 place-items-center rounded-lg bg-accent/10 text-accent">' + GLOBE_SVG + '</span>' +
+          '<span class="text-xs font-bold text-ink">' + esc(I18N[current].nativeName) + '</span>' +
+          CHEVRON_SVG +
+        '</button>'
+      : '<button type="button" class="lang-trigger flex h-10 items-center gap-1 rounded-xl px-2 ring-1 transition hover:ring-gold/50 ' + triggerBg + '" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">' +
+          '<span class="text-accent">' + GLOBE_SVG + '</span>' +
+          '<span class="text-xs font-bold text-ink">' + esc(I18N[current].shortLabel) + '</span>' +
+        '</button>';
+
+    container.innerHTML =
+      triggerHtml +
+      '<div class="lang-menu absolute end-0 top-full z-50 mt-2 hidden w-52 flex-col gap-0.5 rounded-2xl bg-surface p-1.5 shadow-2xl ring-1 ring-edge/10" role="listbox">' +
+        itemsHtml +
+      '</div>';
+  };
+
+  build($('langSwitcher'), false);
+  build($('introLangSwitcher'), true);
+}
+
+function closeAllLangMenus() {
+  document.querySelectorAll('.lang-menu').forEach((m) => {
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+  });
+  document.querySelectorAll('.lang-trigger').forEach((tr) => {
+    tr.setAttribute('aria-expanded', 'false');
+  });
+}
+
+/* Global delegation — set up once */
+function setupLangSwitcherEvents() {
+  document.addEventListener('click', (e) => {
+    // 1) Language item picked
+    const item = e.target.closest('.lang-item');
+    if (item) {
+      const code = item.getAttribute('data-lang-code');
+      if (code && I18N[code]) {
+        closeAllLangMenus();
+        if (code !== state.locale) {
+          state.locale = code;
+          persist();
+          applyLocale();
+        }
+      }
+      return;
+    }
+
+    // 2) Trigger clicked — toggle its menu
+    const trigger = e.target.closest('.lang-trigger');
+    if (trigger) {
+      const container = trigger.parentElement;
+      const menu = container ? container.querySelector('.lang-menu') : null;
+      if (!menu) return;
+
+      const isOpen = !menu.classList.contains('hidden');
+      closeAllLangMenus();
+
+      if (!isOpen) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+      return;
+    }
+
+    // 3) Click outside — close all
+    closeAllLangMenus();
+  });
+}
+
+function renderTabs() {
+  const wrap = $('tabs');
+  wrap.innerHTML = CATEGORIES.map((c) => {
+    const active = c.id === state.activeCategory;
+    return '<button type="button" role="tab" data-cat="' + esc(c.id) + '" ' +
+      'aria-selected="' + (active ? 'true' : 'false') + '" ' +
+      'class="cat-btn ' + (active ? 'is-active' : '') + '">' +
+      '<span class="cat-icon-wrap">' +
+        (c.svg || '<i data-lucide="' + esc(c.icon) + '"></i>') +
+      '</span>' +
+      '<span class="cat-label">' + esc(t(c.labelKey)) + '</span>' +
+      '<span class="cat-dot" aria-hidden="true"></span>' +
+    '</button>';
+  }).join('');
+  refreshIcons();
+}
+
+function setActiveTabVisual(categoryId) {
+  const wrap = $('tabs');
+  if (!wrap) return;
+  wrap.querySelectorAll('[data-cat]').forEach((btn) => {
+    const active = btn.getAttribute('data-cat') === categoryId;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+}
+
+function visibleItems() {
+  const q = state.search.trim().toLowerCase();
+  return MENU.filter((item) => {
+    if (!item.available) return false;
+    if (state.activeCategory !== 'all' && item.category !== state.activeCategory) return false;
+    if (!q) return true;
+    const haystack = [
+      tx(item.name, 'en'), tx(item.name, 'ar'), tx(item.name, 'ku'),
+      tx(item.desc, 'en'), tx(item.desc, 'ar'), tx(item.desc, 'ku'),
+    ].join(' ').toLowerCase();
+    return haystack.includes(q);
+  });
+}
+
+function artSvg(item) {
+  return '<svg viewBox="0 0 120 120" aria-hidden="true">' + (ART[item.art] || ART.latte) + '</svg>';
+}
+
+function tagPillsHtml(item) {
+  return (item.tags || []).slice(0, 2).map((k) => {
+    const s = TAG_STYLES[k];
+    if (!s) return '';
+    return '<span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 backdrop-blur ' + s.cls + '">' +
+      '<span aria-hidden="true">' + s.emoji + '</span>' + esc(t(s.labelKey)) +
+    '</span>';
+  }).join('');
+}
+
+function renderItemMedia(item) {
+  const tags = tagPillsHtml(item);
+  const tagBox = tags ? '<div class="absolute top-2 start-2 z-10 flex flex-col items-start gap-1">' + tags + '</div>' : '';
+  const style = item.tint ? ' style="--tint:' + esc(item.tint) + '"' : '';
+
+  if (item.image) {
+    return '<div class="item-media item-art"' + style + '>' + artSvg(item) +
+      '<img src="' + esc(thumbSrc(item.image)) + '" alt="' + esc(tx(item.name)) + '" loading="lazy" decoding="async" ' +
+        'onerror="this.style.display=\'none\'" />' +
+      tagBox +
+    '</div>';
+  }
+  return '<div class="item-media item-art"' + style + '>' + artSvg(item) + tagBox + '</div>';
+}
+
+function renderCard(item) {
+  return '<button type="button" data-open="' + esc(item.id) + '" ' +
+    'class="reveal group flex flex-col overflow-hidden rounded-2xl bg-surface text-start ring-1 ring-edge/5 shadow-card transition hover:-translate-y-0.5 hover:ring-gold/40 active:scale-[.99]">' +
+    renderItemMedia(item) +
+    '<div class="flex flex-1 flex-col gap-1 p-3">' +
+      '<h3 class="line-clamp-2 text-sm font-semibold leading-tight text-ink">' + esc(tx(item.name)) + '</h3>' +
+      '<p class="line-clamp-2 text-[11px] leading-snug text-muted">' + esc(tx(item.desc)) + '</p>' +
+      '<p class="tnum mt-auto pt-1 text-sm font-bold text-accent">' + esc(formatPrice(item.price)) + '</p>' +
+    '</div>' +
+  '</button>';
+}
+
+function renderGrid() {
+  const grid = $('grid');
+  const empty = $('emptyState');
+  const all = visibleItems();
+
+  if (all.length === 0) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+    empty.classList.add('flex');
+    teardownSectionObserver();
+    return;
+  }
+
+  empty.classList.add('hidden');
+  empty.classList.remove('flex');
+
+  const searching = state.search.trim().length > 0;
+  const singleCategory = state.activeCategory !== 'all';
+
+  if (searching) {
+    grid.innerHTML = '<div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">' +
+      all.map(renderCard).join('') + '</div>';
+    teardownSectionObserver();
+    refreshIcons();
+    observeReveals();
+    return;
+  }
+
+  const sectionsToShow = singleCategory
+    ? GRID_SECTIONS.filter((s) => s.id === state.activeCategory)
+    : GRID_SECTIONS;
+
+  grid.innerHTML = sectionsToShow.map((section, idx) => {
+    const items = all.filter((i) => i.category === section.id);
+    if (items.length === 0) return '';
+
+    const isFirst = idx === 0;
+
+    return '<section data-section="' + esc(section.id) + '" class="' + (isFirst ? '' : 'mt-10') + '">' +
+      '<div class="reveal mb-5 text-center">' +
+        '<h2 class="menu-section-title text-xl text-ink sm:text-2xl">' + esc(t(section.labelKey)) + '</h2>' +
+        '<span class="mx-auto mt-3 block h-px w-12 bg-gradient-to-r from-transparent via-gold to-transparent" aria-hidden="true"></span>' +
+      '</div>' +
+      '<div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">' +
+        items.map(renderCard).join('') +
+      '</div>' +
+    '</section>';
+  }).join('');
+
+  refreshIcons();
+  setupSectionObserver();
+  observeReveals();
+}
+
+let _revealObserver = null;
+function observeReveals() {
+  const els = document.querySelectorAll('#grid .reveal:not(.is-in)');
+  if (!('IntersectionObserver' in window)) { els.forEach((el) => el.classList.add('is-in')); return; }
+  if (!_revealObserver) {
+    _revealObserver = new IntersectionObserver((entries) => {
+      // Stagger the items that appear together, so a row ripples in instead of popping at once
+      let n = 0;
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.style.setProperty('--reveal-delay', Math.min(n++ * 70, 280) + 'ms');
+        entry.target.classList.add('is-in');
+        _revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  }
+  els.forEach((el) => _revealObserver.observe(el));
+}
+
+function teardownSectionObserver() {
+  if (_sectionObserver) {
+    _sectionObserver.disconnect();
+    _sectionObserver = null;
+  }
+}
+
+function setupSectionObserver() {
+  teardownSectionObserver();
+
+  const sections = Array.from(document.querySelectorAll('#grid [data-section]'));
+  if (sections.length < 2) return;
+
+  const visible = new Map();
+
+  _sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const id = entry.target.getAttribute('data-section');
+      visible.set(id, entry.isIntersecting ? entry.intersectionRatio : 0);
+    });
+
+    if (Date.now() < _scrollSpySuspendedUntil) return;
+
+    let bestId = null;
+    let bestRatio = 0;
+    visible.forEach((ratio, id) => {
+      if (ratio > bestRatio) { bestRatio = ratio; bestId = id; }
+    });
+
+    if (bestId) setActiveTabVisual(bestId);
+  }, {
+    rootMargin: '-220px 0px -40% 0px',
+    threshold: [0, 0.15, 0.3, 0.5, 0.75, 1],
+  });
+
+  sections.forEach((s) => _sectionObserver.observe(s));
+}
+
+function renderHoursList() {
+  const list = $('hoursList');
+  if (!list || !hasHours()) return;
+
+  const names = DAY_NAMES[state.locale] || DAY_NAMES.en;
+  const range = hoursRangeText();
+  const todayIdx = new Date().getDay();
+
+  list.innerHTML = names.map((name, i) => {
+    const isToday = i === todayIdx;
+    return '<li class="flex items-center justify-between gap-3 py-2 ' + (isToday ? 'font-semibold' : '') + '">' +
+      '<span class="flex items-center gap-2 ' + (isToday ? 'text-white' : 'text-white/80') + '">' +
+        (isToday ? '<span class="h-1.5 w-1.5 rounded-full bg-white"></span>' : '') +
+        esc(name) +
+      '</span>' +
+      '<span class="tnum text-white" dir="ltr">' + esc(range) + '</span>' +
+    '</li>';
+  }).join('');
+}
+
+/* ── Item details (tap a card) ── */
+function openItemModal(itemId) {
+  const item = findItem(itemId);
+  if (!item || !item.available) return;
+
+  state.openItemId = itemId;
+  renderModal();
+  $('modalRoot').classList.remove('hidden');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    $('modalPanel').classList.add('is-open');
+    $('modalPanel').focus();
+  }));
+}
+
+function closeItemModal() {
+  const panel = $('modalPanel');
+  panel.classList.remove('is-open');
+  state.openItemId = null;
+  setTimeout(() => { $('modalRoot').classList.add('hidden'); }, 280);
+}
+
+function renderModal() {
+  const item = findItem(state.openItemId);
+  if (!item) return;
+
+  const style = item.tint ? ' style="--tint:' + esc(item.tint) + '"' : '';
+  const closeBtn =
+    '<button type="button" id="modalClose" aria-label="' + esc(t('close')) + '" ' +
+      'class="absolute top-3 end-3 z-20 grid h-9 w-9 place-items-center rounded-lg bg-black/60 text-white backdrop-blur transition hover:bg-black/80">' +
+      '<i data-lucide="x" class="h-4 w-4"></i>' +
+    '</button>';
+
+  const media = item.image
+    // Whole photo at its natural shape (no cropping)
+    ? '<div class="relative shrink-0 overflow-hidden bg-surface">' +
+        '<img src="' + esc(item.image) + '" alt="' + esc(tx(item.name)) + '" class="mx-auto block h-auto max-h-[46vh] w-auto max-w-full" onerror="this.style.display=\'none\'" />' +
+        closeBtn +
+      '</div>'
+    : '<div class="item-art relative aspect-[16/11] w-full shrink-0 overflow-hidden"' + style + '>' + artSvg(item) + closeBtn + '</div>';
+
+  const tags = (item.tags || []).map((k) => {
+    const s = TAG_STYLES[k];
+    if (!s) return '';
+    return '<span class="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 text-[11px] font-bold text-accent ring-1 ring-accent/25">' +
+      '<span aria-hidden="true">' + s.emoji + '</span>' + esc(t(s.labelKey)) + '</span>';
+  }).join('');
+
+  $('modalPanel').innerHTML =
+    media +
+    '<div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-4 pt-5">' +
+      (tags ? '<div class="mb-3 flex flex-wrap gap-1.5">' + tags + '</div>' : '') +
+      '<h3 id="modalTitle" class="font-display text-2xl leading-tight text-ink">' + esc(tx(item.name)) + '</h3>' +
+      '<p class="mt-2 text-sm leading-relaxed text-muted">' + esc(tx(item.desc)) + '</p>' +
+      '<p class="tnum mt-4 text-xl font-extrabold text-accent">' + esc(formatPrice(item.price)) + '</p>' +
+    '</div>' +
+    '<footer class="shrink-0 border-t border-edge/10 bg-surface px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4">' +
+      '<button type="button" id="modalDone" ' +
+        'class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand to-brandDark px-4 py-3.5 text-sm font-bold text-white transition hover:from-brandDark hover:to-brandDeeper active:scale-[.99]">' +
+        '<i data-lucide="arrow-left" class="h-4 w-4 rtl-flip"></i>' +
+        '<span>' + esc(t('backToMenu')) + '</span>' +
+      '</button>' +
+    '</footer>';
+
+  refreshIcons();
+}
+
+/* ── Hero slider ── */
+const heroState = { index: 0, timer: null, paused: false };
+
+function heroCount() { return HERO_SLIDES.length; }
+
+function heroGoTo(i) {
+  const n = heroCount();
+  if (!n) return;
+  heroState.index = ((i % n) + n) % n;
+
+  const track = $('heroTrack');
+  if (track) {
+    track.style.transform = 'translateX(' + (-heroState.index * 100) + '%)';
+    track.querySelectorAll('.hero-slide').forEach((s, idx) => {
+      s.classList.toggle('is-current', idx === heroState.index);
+      s.setAttribute('aria-hidden', idx === heroState.index ? 'false' : 'true');
+    });
+  }
+
+  const dots = $('heroDots');
+  if (dots) {
+    dots.querySelectorAll('[data-dot]').forEach((d, idx) => {
+      d.classList.toggle('is-active', idx === heroState.index);
+    });
+  }
+}
+
+function heroNext() { heroGoTo(heroState.index + 1); }
+function heroPrev() { heroGoTo(heroState.index - 1); }
+
+function heroStart() {
+  heroStop();
+  if (heroCount() < 2 || heroState.paused) return;
+  heroState.timer = window.setInterval(() => {
+    if (document.hidden) return;
+    heroNext();
+  }, HERO_INTERVAL_MS);
+}
+
+function heroStop() {
+  if (heroState.timer) { clearInterval(heroState.timer); heroState.timer = null; }
+}
+
+function renderHeroSlider() {
+  const track = $('heroTrack');
+  const dots  = $('heroDots');
+  if (!track || !dots) return;
+  const dir = (I18N[state.locale] || I18N.en).dir;
+
+  track.innerHTML = HERO_SLIDES.map((s, i) => {
+    const copy = (s.title || s.text)
+      ? '<div class="hero-copy" dir="' + dir + '">' +
+          (s.tag ? '<span class="hero-tag">' + esc(tx(s.tag)) + '</span>' : '') +
+          (s.title ? '<h2 class="hero-title">' + esc(tx(s.title)) + '</h2>' : '') +
+          (s.text ? '<p class="hero-text">' + esc(tx(s.text)) + '</p>' : '') +
+        '</div>'
+      : '';
+    const visual = s.src
+      ? '<img src="' + esc(s.src) + '" alt="' + esc(tx(s.title) || t('brand')) + '" loading="' + (i === 0 ? 'eager' : 'lazy') + '" decoding="async" draggable="false" onerror="this.style.display=\'none\'" />' +
+        '<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>'
+      : '<div class="hero-story" style="--glow-x:' + esc(s.glowX || '70%') + '">' +
+          '<svg viewBox="0 0 200 200" aria-hidden="true">' + (HERO_ART[s.art] || HERO_ART.cup) + '</svg>' +
+        '</div>';
+    return '<div class="hero-slide" role="group" aria-roledescription="slide" aria-label="' + (i + 1) + ' / ' + HERO_SLIDES.length + '">' +
+      visual + copy +
+    '</div>';
+  }).join('');
+
+  dots.innerHTML = HERO_SLIDES.map((s, i) =>
+    '<button type="button" data-dot="' + i + '" ' +
+      'aria-label="' + esc(tx(s.title) || (i + 1)) + '" ' +
+      'class="hero-dot' + (i === heroState.index ? ' is-active' : '') + '"></button>'
+  ).join('');
+
+  heroGoTo(heroState.index);
+}
+
+function initHeroSlider() {
+  const slider = $('heroSlider');
+  const prev   = $('heroPrev');
+  const next   = $('heroNext');
+  const dots   = $('heroDots');
+  if (!slider) return;
+
+  renderHeroSlider();
+
+  if (prev) prev.addEventListener('click', () => { heroPrev(); heroStart(); });
+  if (next) next.addEventListener('click', () => { heroNext(); heroStart(); });
+
+  if (dots) {
+    dots.addEventListener('click', (e) => {
+      const d = e.target.closest('[data-dot]');
+      if (!d) return;
+      const i = parseInt(d.getAttribute('data-dot'), 10);
+      if (Number.isFinite(i)) { heroGoTo(i); heroStart(); }
+    });
+  }
+
+  slider.addEventListener('pointerenter', () => { heroState.paused = true;  heroStop();  });
+  slider.addEventListener('pointerleave', () => { heroState.paused = false; heroStart(); });
+  slider.addEventListener('focusin',      () => { heroState.paused = true;  heroStop();  });
+  slider.addEventListener('focusout',     () => { heroState.paused = false; heroStart(); });
+
+  let startX = 0, dragging = false;
+  slider.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse') return;
+    dragging = true; startX = e.clientX;
+  });
+  slider.addEventListener('pointerup', (e) => {
+    if (!dragging) return;
+    dragging = false;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 40) { dx < 0 ? heroNext() : heroPrev(); heroStart(); }
+  });
+  slider.addEventListener('pointercancel', () => { dragging = false; });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) heroStop(); else heroStart();
+  });
+
+  heroStart();
+  initHeroParallax(slider);
+}
+
+function initHeroParallax(slider) {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const header = document.querySelector('body > header');
+  let ticking = false;
+  let current = 0;
+  const update = () => {
+    ticking = false;
+    // Where the slider would be without the effect (undo the shift we applied last time)
+    const top = slider.getBoundingClientRect().top - current;
+    const headerH = header ? header.offsetHeight : 0;
+    // Once the slider starts passing under the sticky header, hold it back at 35% of the scroll
+    const passed = Math.max(0, Math.min(slider.offsetHeight, headerH - top));
+    const y = Math.round(passed * 0.35);
+    if (y !== current) {
+      current = y;
+      slider.style.transform = y ? 'translate3d(0,' + y + 'px,0)' : '';
+    }
+  };
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+}
+
+/* ====================================================================
+ * §8 — EVENT WIRING
+ * ==================================================================== */
+
+$('themeToggle').addEventListener('click', toggleTheme);
+$('introThemeToggle').addEventListener('click', toggleTheme);
+
+$('enterMenuBtn').addEventListener('click', () => {
+  hideIntro();
+  refreshIcons();
+});
+
+$('homeBtn').addEventListener('click', () => {
+  showIntro();
+  refreshIcons();
+});
+
+const searchInput = $('searchInput');
+const searchClear = $('searchClear');
+
+searchInput.addEventListener('input', () => {
+  state.search = searchInput.value || '';
+  searchClear.classList.toggle('hidden', state.search.length === 0);
+  searchClear.classList.toggle('grid', state.search.length > 0);
+  renderGrid();
+});
+
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  state.search = '';
+  searchClear.classList.add('hidden');
+  searchClear.classList.remove('grid');
+  renderGrid();
+  searchInput.focus();
+});
+
+$('tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-cat]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-cat');
+  if (!id || id === state.activeCategory) return;
+
+  _scrollSpySuspendedUntil = Date.now() + 900;
+
+  state.activeCategory = id;
+  renderTabs();
+  renderGrid();
+  refreshIcons();
+
+  requestAnimationFrame(() => {
+    const target = document.querySelector('#grid [data-section="' + id + '"]');
+    if (target) {
+      const y = target.getBoundingClientRect().top + window.scrollY - 210;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  });
+});
+
+$('grid').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-open]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-open');
+  if (id) openItemModal(id);
+});
+
+$('modalBackdrop').addEventListener('click', closeItemModal);
+
+$('modalPanel').addEventListener('click', (e) => {
+  if (e.target.closest('#modalClose') || e.target.closest('#modalDone')) closeItemModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  closeAllLangMenus();
+  if (!$('modalRoot').classList.contains('hidden')) closeItemModal();
+});
+
+/* ====================================================================
+ * §9 — BOOTSTRAP
+ * ==================================================================== */
+
+function init() {
+  const year = String(new Date().getFullYear());
+  if ($('yearNow')) $('yearNow').textContent = year;
+  if ($('yearNowIntro')) $('yearNowIntro').textContent = year;
+
+  // Set up the language switcher delegation ONCE — before the first render
+  setupLangSwitcherEvents();
+
+  restore();
+  applyTheme(state.theme);
+  state.isOpen = computeIsOpenNow();
+  initHeroSlider();
+  applyLocale();
+  showIntro();
+  refreshIcons();
+
+  window.setInterval(refreshOpenStatus, 60_000);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init, { once: true });
+} else {
+  init();
+}
+
+window.addEventListener('load', refreshIcons);
+</script>
+</body>
+</html>
