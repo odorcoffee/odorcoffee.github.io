@@ -314,6 +314,8 @@
     pointer-events: none;
   }
   html[data-theme="light"] .item-art::after { background: linear-gradient(to top, rgb(138 92 50 / .08), transparent); }
+  /* photos keep their own clean background (the drawing stays behind only in case the photo fails) */
+  .item-art.has-photo::after { display: none; }
 
   /* ── Entry screen background (warm glow + rising steam) ── */
   .intro-bg {
@@ -827,7 +829,7 @@ const STORE = {
 
 /* ====================================================================
  * §1 — MENU
- * To add a photo: put it in image/ (square works best) and set image:'image/your-photo.webp'.
+ * To add a photo: put it in image/menu/ (square works best) and set image:'image/menu/your-photo.webp'.
  * Without a photo the card shows the drawing named in art.
  * ==================================================================== */
 
@@ -836,7 +838,7 @@ const MENU = [
   { id:'odor-chocolate', category:'hot',
     name:{en:'Odor Chocolate', ar:'شوكولاتة أودور', ku:'چۆکلێتی ئۆدۆر'},
     desc:{en:'Our own Odor chocolate drink.', ar:'مشروب الشوكولاتة الخاص بأودور.', ku:'خواردنەوەی چۆکلێتی تایبەتی ئۆدۆر.'},
-    price:3000, art:'mocha', image:'', tags:['signature'], available:true },
+    price:3000, art:'mocha', image:'image/menu/odor-chocolate.webp', tags:['signature'], available:true },
 
   { id:'hot-chocolate', category:'hot',
     name:{en:'Hot Chocolate', ar:'شوكولاتة ساخنة', ku:'چۆکلێتی گەرم'},
@@ -846,12 +848,12 @@ const MENU = [
   { id:'nescafe', category:'hot',
     name:{en:'Nescafé', ar:'نسكافيه', ku:'نێسکافێ'},
     desc:{en:'Classic Nescafé, served hot.', ar:'نسكافيه كلاسيكي يُقدَّم ساخناً.', ku:'نێسکافێی کلاسیک، بە گەرمی.'},
-    price:5000, art:'mug', image:'', tags:[], available:true },
+    price:5000, art:'mug', image:'image/menu/nescafe.webp', tags:[], available:true },
 
   { id:'espresso', category:'hot',
     name:{en:'Espresso', ar:'إسبريسو', ku:'ئێسپرێسۆ'},
     desc:{en:'A short, strong shot of espresso.', ar:'جرعة إسبريسو قصيرة وقوية.', ku:'شۆتێکی کورت و بەهێزی ئێسپرێسۆ.'},
-    price:2000, art:'espresso', image:'', tags:[], available:true },
+    price:2000, art:'espresso', image:'image/menu/espresso.webp', tags:[], available:true },
 
   { id:'caffe-latte', category:'hot',
     name:{en:'Caffè Latte', ar:'كافيه لاتيه', ku:'کافێ لاتێ'},
@@ -861,17 +863,17 @@ const MENU = [
   { id:'spanish-latte', category:'hot',
     name:{en:'Spanish Latte', ar:'سبانش لاتيه', ku:'سپانیش لاتێ'},
     desc:{en:'Espresso, milk and sweet condensed milk.', ar:'إسبريسو وحليب وحليب مكثّف محلّى.', ku:'ئێسپرێسۆ، شیر و شیری چڕکراوەی شیرین.'},
-    price:5750, art:'latte', image:'', tags:[], available:true },
+    price:5750, art:'latte', image:'image/menu/spanish-latte.webp', tags:[], available:true },
 
   { id:'cappuccino', category:'hot',
     name:{en:'Cappuccino', ar:'كابتشينو', ku:'کاپوچینۆ'},
     desc:{en:'Espresso, steamed milk and a thick layer of foam.', ar:'إسبريسو وحليب مبخّر وطبقة كثيفة من الرغوة.', ku:'ئێسپرێسۆ، شیری گەرم و چینێکی ئەستووری کەف.'},
-    price:5000, art:'cappuccino', image:'', tags:[], available:true },
+    price:5000, art:'cappuccino', image:'image/menu/cappuccino.webp', tags:[], available:true },
 
   { id:'turkish-coffee', category:'hot',
     name:{en:'Turkish Coffee', ar:'قهوة تركية', ku:'قاوەی تورکی'},
     desc:{en:'Finely ground coffee, slowly brewed the traditional way.', ar:'قهوة مطحونة ناعماً، تُحضَّر ببطء على الطريقة التقليدية.', ku:'قاوەی وردهاڕاو، بە هێواشی و بە شێوەی نەریتی لێنراو.'},
-    price:4000, art:'turkish', image:'', tags:[], available:true },
+    price:4000, art:'turkish', image:'image/menu/turkish-coffee.webp', tags:[], available:true },
 
   { id:'qazwan-coffee', category:'hot',
     name:{en:'Qazwan Coffee', ar:'قهوة قزوان', ku:'قاوەی قەزوان'},
@@ -881,33 +883,33 @@ const MENU = [
   { id:'americano', category:'hot',
     name:{en:'Americano', ar:'أمريكانو', ku:'ئەمریکانۆ'},
     desc:{en:'American coffee: espresso topped with hot water.', ar:'قهوة أمريكية: إسبريسو مع ماء ساخن.', ku:'قاوەی ئەمریکی: ئێسپرێسۆ لەگەڵ ئاوی گەرم.'},
-    price:4500, art:'mug', image:'', tags:[], available:true },
+    price:4500, art:'mug', image:'image/menu/americano.webp', tags:[], available:true },
 
   /* ── Cold coffee ── */
   { id:'iced-coffee', category:'iced',
     name:{en:'Iced Coffee', ar:'قهوة مثلجة', ku:'ئایس کۆفی'},
     desc:{en:'Chilled coffee served over ice.', ar:'قهوة باردة تُقدَّم مع الثلج.', ku:'قاوەی سارد لەگەڵ سەهۆڵ.'},
-    price:4000, art:'coldbrew', image:'', tags:[], available:true },
+    price:4000, art:'coldbrew', image:'image/menu/iced-coffee.webp', tags:[], available:true },
 
   { id:'iced-latte', category:'iced',
     name:{en:'Iced Latte', ar:'آيس لاتيه', ku:'ئایس لاتێ'},
     desc:{en:'Espresso and cold milk over ice.', ar:'إسبريسو وحليب بارد مع الثلج.', ku:'ئێسپرێسۆ و شیری سارد لەگەڵ سەهۆڵ.'},
-    price:5500, art:'iced', image:'', tags:[], available:true },
+    price:5500, art:'iced', image:'image/menu/iced-latte.webp', tags:[], available:true },
 
   { id:'iced-mocha', category:'iced',
     name:{en:'Iced Mocha', ar:'آيس موكا', ku:'ئایس مۆکا'},
     desc:{en:'Espresso, chocolate and cold milk over ice.', ar:'إسبريسو وشوكولاتة وحليب بارد مع الثلج.', ku:'ئێسپرێسۆ، چۆکلێت و شیری سارد لەگەڵ سەهۆڵ.'},
-    price:6000, art:'icedmocha', image:'', tags:[], available:true },
+    price:6000, art:'icedmocha', image:'image/menu/iced-mocha.webp', tags:[], available:true },
 
   { id:'iced-spanish-latte', category:'iced',
     name:{en:'Iced Spanish Latte', ar:'آيس سبانش لاتيه', ku:'ئایس سپانیش لاتێ'},
     desc:{en:'Espresso, cold milk and sweet condensed milk over ice.', ar:'إسبريسو وحليب بارد وحليب مكثّف محلّى مع الثلج.', ku:'ئێسپرێسۆ، شیری سارد و شیری چڕکراوەی شیرین لەگەڵ سەهۆڵ.'},
-    price:6500, art:'iced', image:'', tags:[], available:true },
+    price:6500, art:'iced', image:'image/menu/iced-spanish-latte.webp', tags:[], available:true },
 
   { id:'iced-americano', category:'iced',
     name:{en:'Iced Americano', ar:'آيس أمريكانو', ku:'ئایس ئەمریکانۆ'},
     desc:{en:'Espresso and cold water over ice.', ar:'إسبريسو وماء بارد مع الثلج.', ku:'ئێسپرێسۆ و ئاوی سارد لەگەڵ سەهۆڵ.'},
-    price:4500, art:'coldbrew', image:'', tags:[], available:true },
+    price:4500, art:'coldbrew', image:'image/menu/iced-americano.webp', tags:[], available:true },
 
   /* ── Cold drinks ── */
   { id:'orange-juice', category:'juice',
@@ -1640,7 +1642,7 @@ function renderItemMedia(item) {
   const style = item.tint ? ' style="--tint:' + esc(item.tint) + '"' : '';
 
   if (item.image) {
-    return '<div class="item-media item-art"' + style + '>' + artSvg(item) +
+    return '<div class="item-media item-art has-photo"' + style + '>' + artSvg(item) +
       '<img src="' + esc(thumbSrc(item.image)) + '" alt="' + esc(tx(item.name)) + '" loading="lazy" decoding="async" ' +
         'onerror="this.style.display=\'none\'" />' +
       tagBox +

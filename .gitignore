@@ -1,2 +1,8 @@
 # the old draft of the menu (kept on this computer, not published)
 _old/
+
+# Raw photos dropped in by hand; the menu uses the square .webp copies in image/menu/
+# (files already in git, like the logo and icons, stay tracked)
+image/*.jpg
+image/*.jpeg
+image/*.png
