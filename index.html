@@ -971,13 +971,95 @@ const MENU = [
     name:{en:'Avocado Juice', ar:'عصير أفوكادو', ku:'شەربەتی ئەڤۆکادۆ'},
     desc:{en:'Creamy blended avocado.', ar:'أفوكادو مخفوق بقوام كريمي.', ku:'ئەڤۆکادۆی تێکەڵکراو بە چێژێکی کرێمی.'},
     price:6500, art:'smoothie', tint:'#A9C46C', image:'image/menu/avocado-juice.webp', tags:[], available:true },
+
+  /* ── Coffee beans & more (to take home) — price:null shows "Ask for price" until a price is set ── */
+  { id:'beans-colombian-blond', category:'beans',
+    name:{en:'Blond Colombian', ar:'كولومبي أشقر', ku:'کۆلۆمبی کاڵ'},
+    desc:{en:'Colombian coffee beans, light (blond) roast.', ar:'حبوب قهوة كولومبية، تحميص فاتح (أشقر).', ku:'دەنکی قاوەی کۆلۆمبی، برژاندنی کاڵ.'},
+    price:null, art:'espresso', image:'image/menu/beans-colombian-blond.webp', tags:[], available:true },
+
+  { id:'beans-colombian-brown', category:'beans',
+    name:{en:'Brown Colombian', ar:'كولومبي بني', ku:'کۆلۆمبی تۆخ'},
+    desc:{en:'Colombian coffee beans, medium-dark (brown) roast.', ar:'حبوب قهوة كولومبية، تحميص متوسط إلى غامق (بني).', ku:'دەنکی قاوەی کۆلۆمبی، برژاندنی ناوەند بۆ تۆخ.'},
+    price:null, art:'espresso', image:'image/menu/beans-colombian-brown.webp', tags:[], available:true },
+
+  { id:'beans-brazilian-blond', category:'beans',
+    name:{en:'Blond Brazilian', ar:'برازيلي أشقر', ku:'بەڕازیلی کاڵ'},
+    desc:{en:'Brazilian coffee beans, light (blond) roast.', ar:'حبوب قهوة برازيلية، تحميص فاتح (أشقر).', ku:'دەنکی قاوەی بەڕازیلی، برژاندنی کاڵ.'},
+    price:null, art:'espresso', image:'image/menu/beans-brazilian-blond.webp', tags:[], available:true },
+
+  { id:'beans-brazilian-brown', category:'beans',
+    name:{en:'Brown Brazilian', ar:'برازيلي بني', ku:'بەڕازیلی تۆخ'},
+    desc:{en:'Brazilian coffee beans, medium-dark (brown) roast.', ar:'حبوب قهوة برازيلية، تحميص متوسط إلى غامق (بني).', ku:'دەنکی قاوەی بەڕازیلی، برژاندنی ناوەند بۆ تۆخ.'},
+    price:null, art:'espresso', image:'image/menu/beans-brazilian-brown.webp', tags:[], available:true },
+
+  { id:'beans-american-blond', category:'beans',
+    name:{en:'Blond American', ar:'أمريكي أشقر', ku:'ئەمریکی کاڵ'},
+    desc:{en:'American-style coffee blend, light (blond) roast.', ar:'خلطة قهوة أمريكية، تحميص فاتح (أشقر).', ku:'تێکەڵەی قاوەی ئەمریکی، برژاندنی کاڵ.'},
+    price:null, art:'espresso', image:'image/menu/beans-american-blond.webp', tags:[], available:true },
+
+  { id:'beans-american-brown', category:'beans',
+    name:{en:'Brown American', ar:'أمريكي بني', ku:'ئەمریکی تۆخ'},
+    desc:{en:'American-style coffee blend, medium-dark (brown) roast.', ar:'خلطة قهوة أمريكية، تحميص متوسط إلى غامق (بني).', ku:'تێکەڵەی قاوەی ئەمریکی، برژاندنی ناوەند بۆ تۆخ.'},
+    price:null, art:'espresso', image:'image/menu/beans-american-brown.webp', tags:[], available:true },
+
+  { id:'beans-italian-brown', category:'beans',
+    name:{en:'Brown Italian', ar:'إيطالي بني', ku:'ئیتاڵی تۆخ'},
+    desc:{en:'Italian-style dark roast, rich and bold.', ar:'تحميص إيطالي غامق، نكهة غنية وقوية.', ku:'برژاندنی تۆخی ئیتاڵی، تامێکی چڕ و بەهێز.'},
+    price:null, art:'espresso', image:'image/menu/beans-italian-brown.webp', tags:[], available:true },
+
+  { id:'beans-yemeni', category:'beans',
+    name:{en:'Yemeni Coffee', ar:'قهوة يمنية', ku:'قاوەی یەمەنی'},
+    desc:{en:'Roasted coffee beans from Yemen.', ar:'حبوب قهوة يمنية محمّصة.', ku:'دەنکی قاوەی یەمەنیی برژاو.'},
+    price:null, art:'espresso', image:'image/menu/beans-yemeni.webp', tags:[], available:true },
+
+  { id:'beans-yemeni-green', category:'beans',
+    name:{en:'Yemeni Green Coffee', ar:'قهوة يمنية خضراء', ku:'قاوەی یەمەنیی سەوز'},
+    desc:{en:'Green (unroasted) coffee beans from Yemen.', ar:'حبوب قهوة يمنية خضراء غير محمّصة.', ku:'دەنکی قاوەی یەمەنیی سەوز (نەبرژاو).'},
+    price:null, art:'espresso', image:'image/menu/beans-yemeni-green.webp', tags:[], available:true },
+
+  { id:'beans-qazwan', category:'beans',
+    name:{en:'Qazwan Coffee', ar:'قهوة قزوان', ku:'قاوەی قەزوان'},
+    desc:{en:'Ground qazwan (wild pistachio) for traditional Kurdish coffee.', ar:'قزوان مطحون لتحضير القهوة الكردية التقليدية.', ku:'قەزوانی هاڕاو بۆ قاوەی نەریتیی کوردی.'},
+    price:null, art:'turkish', image:'image/menu/beans-qazwan.webp', tags:[], available:true },
+
+  { id:'beans-nescafe-gold', category:'beans',
+    name:{en:'Nescafé Gold', ar:'نسكافيه غولد', ku:'نێسکافێ گۆڵد'},
+    desc:{en:'Nescafé Gold instant coffee.', ar:'قهوة نسكافيه غولد سريعة التحضير.', ku:'قاوەی خێرای نێسکافێ گۆڵد.'},
+    price:null, art:'mug', image:'image/menu/beans-nescafe-gold.webp', tags:[], available:true },
+
+  { id:'beans-nescafe-classic', category:'beans',
+    name:{en:'Nescafé Classic', ar:'نسكافيه كلاسيك', ku:'نێسکافێ کلاسیک'},
+    desc:{en:'Nescafé Classic instant coffee.', ar:'قهوة نسكافيه كلاسيك سريعة التحضير.', ku:'قاوەی خێرای نێسکافێ کلاسیک.'},
+    price:null, art:'mug', image:'image/menu/beans-nescafe-classic.webp', tags:[], available:true },
+
+  { id:'beans-cocoa', category:'beans',
+    name:{en:'Cocoa', ar:'كاكاو', ku:'کاکاو'},
+    desc:{en:'Cocoa powder for drinks and baking.', ar:'مسحوق كاكاو للمشروبات والحلويات.', ku:'هاڕاوەی کاکاو بۆ خواردنەوە و شیرینی.'},
+    price:null, art:'mocha', image:'image/menu/beans-cocoa.webp', tags:[], available:true },
+
+  { id:'beans-chocolate', category:'beans',
+    name:{en:'Chocolate', ar:'شوكولاتة', ku:'چۆکلێت'},
+    desc:{en:'Chocolate powder for hot and cold drinks.', ar:'مسحوق شوكولاتة للمشروبات الساخنة والباردة.', ku:'هاڕاوەی چۆکلێت بۆ خواردنەوەی گەرم و سارد.'},
+    price:null, art:'mocha', image:'image/menu/beans-chocolate.webp', tags:[], available:true },
+
+  { id:'beans-creamer', category:'beans',
+    name:{en:'Coffee Creamer', ar:'كريمر القهوة', ku:'کرێمەری قاوە'},
+    desc:{en:'Powdered creamer for coffee.', ar:'مبيّض قهوة بودرة (كريمر).', ku:'کرێمەری هاڕاو بۆ قاوە.'},
+    price:null, art:'latte', image:'image/menu/beans-creamer.webp', tags:[], available:true },
+
+  { id:'beans-odor-tea', category:'beans',
+    name:{en:'Odor Tea', ar:'شاي أودور', ku:'چای ئۆدۆر'},
+    desc:{en:'Our own loose black tea.', ar:'شاي أسود سائب خاص بأودور.', ku:'چای ڕەشی تایبەتی ئۆدۆر.'},
+    price:null, art:'mug', image:'image/menu/beans-odor-tea.webp', tags:[], available:true },
 ];
 
-/* Category icons: Odor's own drawings (hot cup, iced glass, juice) */
+/* Category icons: Odor's own drawings (hot cup, iced glass, juice, coffee beans) */
 const CAT_SVG = {
   hot:   '<svg class="cat-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3.5c0 1.5-1.5 1.5-1.5 3s1.5 1.5 1.5 3"/><path d="M16 2.5c0 1.5-1.5 1.5-1.5 3s1.5 1.5 1.5 3"/><path d="M21 3.5c0 1.5-1.5 1.5-1.5 3s1.5 1.5 1.5 3"/><path d="M4 13h24v5.5a8.5 8.5 0 0 1-8.5 8.5h-7A8.5 8.5 0 0 1 4 18.5V13z"/><path d="M28 15h1.5a3 3 0 0 1 0 6H28"/><path d="M2 29h28"/></svg>',
   iced:  '<svg class="cat-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 2.5L19 12"/><path d="M8 5.5h16l-1.5 22a2 2 0 0 1-2 1.8h-9a2 2 0 0 1-2-1.8L8 5.5z"/><rect x="12" y="9" width="4" height="4" rx="0.8"/><rect x="17.5" y="12" width="3.5" height="3.5" rx="0.8"/><rect x="11.5" y="16" width="3.5" height="3.5" rx="0.8"/><rect x="16.5" y="18.5" width="3" height="3" rx="0.8"/></svg>',
   juice: '<svg class="cat-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3l-3.5 10"/><path d="M23 3c1.5 0 2.5 1 2.5 2.5S24.5 8 23 8"/><path d="M6 8h20l-2 20a2 2 0 0 1-2 1.8H10a2 2 0 0 1-2-1.8L6 8z"/><path d="M6.6 14.5h18.8"/><circle cx="13" cy="19" r="1.2"/><circle cx="18.5" cy="22" r="1"/><circle cx="15" cy="24.5" r="0.9"/><circle cx="20.5" cy="17" r="0.9"/></svg>',
+  beans: '<svg class="cat-svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(-32 11 19.5)"><ellipse cx="11" cy="19.5" rx="5.6" ry="8"/><path d="M11 11.5c-2.6 2.6-2.6 5.4 0 8s2.6 5.4 0 8"/></g><g transform="rotate(28 21.5 11.5)"><ellipse cx="21.5" cy="11.5" rx="4.8" ry="6.9"/><path d="M21.5 4.6c-2.2 2.2-2.2 4.7 0 6.9s2.2 4.7 0 6.9"/></g></svg>',
 };
 
 const CATEGORIES = [
@@ -985,12 +1067,14 @@ const CATEGORIES = [
   { id:'hot',   labelKey:'catHot',   svg: CAT_SVG.hot   },
   { id:'iced',  labelKey:'catIced',  svg: CAT_SVG.iced  },
   { id:'juice', labelKey:'catJuice', svg: CAT_SVG.juice },
+  { id:'beans', labelKey:'catBeans', svg: CAT_SVG.beans },
 ];
 
 const GRID_SECTIONS = [
   { id:'hot',   labelKey:'catHot'   },
   { id:'iced',  labelKey:'catIced'  },
   { id:'juice', labelKey:'catJuice' },
+  { id:'beans', labelKey:'catBeans' },
 ];
 
 const TAG_STYLES = {
@@ -1097,7 +1181,8 @@ const I18N = {
     htmlLang:'en', dir:'ltr', shortLabel:'EN', nativeName:'English',
     brand:'ODOR Coffee', tagline:'Coffee, cold drinks & fresh juice', restaurant:'COFFEE & JUICE',
     searchPlaceholder:'Search coffee, juice, latte…', clearSearch:'Clear search',
-    catAll:'All', catHot:'Hot Coffee', catIced:'Cold Coffee', catJuice:'Cold Drinks',
+    catAll:'All', catHot:'Hot Coffee', catIced:'Cold Coffee', catJuice:'Cold Drinks', catBeans:'Coffee Beans',
+    askPrice:'Ask for price',
     tagSignature:'Signature', tagNew:'New', tagVegan:'Plant-based',
     noResults:'Nothing matches that', noResultsHint:'Try a different search or category.',
     openMenu:'Menu',
@@ -1124,7 +1209,8 @@ const I18N = {
     htmlLang:'ar', dir:'rtl', shortLabel:'ع', nativeName:'العربية',
     brand:'أودور كوفي', tagline:'قهوة، مشروبات باردة وعصائر طازجة', restaurant:'قهوة وعصائر',
     searchPlaceholder:'ابحث عن قهوة، عصير، لاتيه…', clearSearch:'مسح البحث',
-    catAll:'الكل', catHot:'قهوة ساخنة', catIced:'قهوة باردة', catJuice:'مشروبات باردة',
+    catAll:'الكل', catHot:'قهوة ساخنة', catIced:'قهوة باردة', catJuice:'مشروبات باردة', catBeans:'حبوب القهوة',
+    askPrice:'اسأل عن السعر',
     tagSignature:'مميّز', tagNew:'جديد', tagVegan:'نباتي',
     noResults:'لا توجد نتائج مطابقة', noResultsHint:'جرّب بحثاً أو تصنيفاً آخر.',
     openMenu:'القائمة',
@@ -1151,7 +1237,8 @@ const I18N = {
     htmlLang:'ckb', dir:'rtl', shortLabel:'ک', nativeName:'کوردی',
     brand:'ئۆدۆر کۆفی', tagline:'قاوە، خواردنەوەی سارد و شەربەتی تازە', restaurant:'قاوە و شەربەت',
     searchPlaceholder:'گەڕان بۆ قاوە، شەربەت، لاتێ…', clearSearch:'سڕینەوەی گەڕان',
-    catAll:'هەموو', catHot:'قاوەی گەرم', catIced:'قاوەی سارد', catJuice:'خواردنەوەی سارد',
+    catAll:'هەموو', catHot:'قاوەی گەرم', catIced:'قاوەی سارد', catJuice:'خواردنەوەی سارد', catBeans:'دەنکی قاوە',
+    askPrice:'بۆ نرخ پرسیار بکە',
     tagSignature:'تایبەت', tagNew:'نوێ', tagVegan:'ڕووەکی',
     noResults:'هیچ ئەنجامێک نەدۆزرایەوە', noResultsHint:'وشەیەکی تر یان بەشێکی تر تاقی بکەرەوە.',
     openMenu:'مینیو',
@@ -1205,6 +1292,7 @@ function formatNumber(value, locale) {
 
 function formatPrice(amount, locale) {
   const l = locale || state.locale;
+  if (amount == null) return t('askPrice'); // no price set yet
   return formatNumber(amount, l) + ' ' + CURRENCY_SUFFIX[l];
 }
 
@@ -1606,6 +1694,13 @@ function setActiveTabVisual(categoryId) {
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-selected', active ? 'true' : 'false');
   });
+  // the tab row scrolls sideways on phones: keep the active tab in view
+  const on = wrap.querySelector('.cat-btn.is-active');
+  if (on && wrap.scrollWidth > wrap.clientWidth) {
+    const b = on.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+    if (b.left < w.left) wrap.scrollBy({ left: b.left - w.left - 16, behavior: 'smooth' });
+    else if (b.right > w.right) wrap.scrollBy({ left: b.right - w.right + 16, behavior: 'smooth' });
+  }
 }
 
 function visibleItems() {
