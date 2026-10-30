@@ -6,3 +6,6 @@ _old/
 image/*.jpg
 image/*.jpeg
 image/*.png
+
+# Raw by-the-kilo photos (the menu uses the square copies in image/menu/kilo-*.webp)
+imagekilo/
