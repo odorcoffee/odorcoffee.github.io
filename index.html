@@ -812,7 +812,7 @@
 const STORE = {
   instagram: 'https://www.instagram.com/odor_coffe',
   facebook:  'https://www.facebook.com/Odor-coffe-101269578621808/',
-  tiktok:    '',   // e.g. 'https://www.tiktok.com/@odorcoffee'
+  tiktok:    'https://www.tiktok.com/@odorcoffee',
   whatsapp:  'https://wa.me/9647511559191',
   phone:     '+9647511559191',
   // The shop's own Google Maps listing (pinned at plus code 6X3R+WHC)
@@ -824,7 +824,7 @@ const STORE = {
     ku: ['شەقامی سوپەرمارکێت، 6X3R+WHC', 'هەولێر، عێراق'],
   },
   // Opening hours in Baghdad time, 24-hour 'HH:MM' (close '00:00' = midnight). Empty = the hours card is hidden.
-  hours: { open: '08:00', close: '02:00' },   // daily 8:00 AM – 2:00 AM
+  hours: { open: '08:00', close: '00:00' },   // daily 8:00 AM – 12:00 AM (midnight)
 };
 
 /* ====================================================================
@@ -1201,6 +1201,8 @@ const I18N = {
     weeklySchedule:'Weekly schedule',
     openNow:'Open Now',
     closedNow:'Closed',
+    closesIn:'Closes in', opensIn:'Opens in', closingSoon:'Closing soon',
+    cdHours:'Hours', cdMinutes:'Minutes', cdSeconds:'Seconds',
     openDaily:'Open Daily',
     hoursNote:'Times shown in Baghdad local time.',
     callCta:'Call',
@@ -1229,6 +1231,8 @@ const I18N = {
     weeklySchedule:'الجدول الأسبوعي',
     openNow:'مفتوح الآن',
     closedNow:'مغلق',
+    closesIn:'يغلق خلال', opensIn:'يفتح خلال', closingSoon:'سنغلق قريباً',
+    cdHours:'ساعة', cdMinutes:'دقيقة', cdSeconds:'ثانية',
     openDaily:'مفتوح يومياً',
     hoursNote:'الأوقات حسب توقيت بغداد.',
     callCta:'اتصال',
@@ -1257,6 +1261,8 @@ const I18N = {
     weeklySchedule:'خشتەی هەفتانە',
     openNow:'ئێستا کراوەیە',
     closedNow:'داخراوە',
+    closesIn:'دادەخرێت دوای', opensIn:'دەکرێتەوە دوای', closingSoon:'بەم زووانە دادەخرێت',
+    cdHours:'کاتژمێر', cdMinutes:'خولەک', cdSeconds:'چرکە',
     openDaily:'ڕۆژانە کراوەیە',
     hoursNote:'کاتەکان بە کاتی بەغدا نیشان دراون.',
     callCta:'پەیوەندیکردن',
@@ -1428,27 +1434,37 @@ function getStoreTimeParts() {
       timeZone: STORE_TZ,
       hour: 'numeric',
       minute: 'numeric',
+      second: 'numeric',
       hour12: false,
     });
     const parts = fmt.formatToParts(new Date());
-    const rawHour = parseInt(parts.find((p) => p.type === 'hour').value, 10);
-    const minute  = parseInt(parts.find((p) => p.type === 'minute').value, 10);
+    const num = (type) => parseInt(parts.find((p) => p.type === type).value, 10);
+    const rawHour = num('hour'), minute = num('minute'), second = num('second');
     const hour = (Number.isFinite(rawHour) ? rawHour : 0) % 24;
-    return { hour, minute: Number.isFinite(minute) ? minute : 0 };
+    return { hour, minute: Number.isFinite(minute) ? minute : 0, second: Number.isFinite(second) ? second : 0 };
   } catch {
     const d = new Date();
-    return { hour: d.getHours(), minute: d.getMinutes() };
+    return { hour: d.getHours(), minute: d.getMinutes(), second: d.getSeconds() };
   }
 }
 
-function computeIsOpenNow() {
-  if (!hasHours()) return false;
-  const { hour, minute } = getStoreTimeParts();
-  const now = hour * 60 + minute;
-  const open = toMinutes(STORE.hours.open), close = toMinutes(STORE.hours.close, true);
+// open = open right now · secs = until closing (open) or until opening (closed) · soon = last 30 minutes
+function getStoreStatus() {
+  if (!hasHours()) return { open: false, secs: 0 };
+  const DAY = 24 * 3600;
+  const { hour, minute, second } = getStoreTimeParts();
+  const now = hour * 3600 + minute * 60 + second;
+  const open = toMinutes(STORE.hours.open) * 60, close = toMinutes(STORE.hours.close, true) * 60;
   // open past midnight (e.g. 16:00 – 02:00)
-  return close > open ? (now >= open && now < close) : (now >= open || now < close);
+  const isOpen = close > open ? (now >= open && now < close) : (now >= open || now < close);
+  if (isOpen) {
+    const secs = (close - now + DAY) % DAY || DAY;
+    return { open: true, secs, soon: secs <= 30 * 60 };
+  }
+  return { open: false, secs: (open - now + DAY) % DAY };
 }
+
+function computeIsOpenNow() { return getStoreStatus().open; }
 
 function renderOpenStatus() {
   const badge = $('openNowBadge');
@@ -1466,10 +1482,37 @@ function renderOpenStatus() {
   }
 }
 
-function refreshOpenStatus() {
-  state.isOpen = computeIsOpenNow();
-  renderOpenStatus();
+const CD_BOX  = 'rounded-xl bg-white/[.14] px-1 py-1.5 text-center ring-1 ring-white/25 transition-colors';
+const CD_SOON = 'rounded-xl bg-amber-400/30 px-1 py-1.5 text-center ring-1 ring-amber-200/70 transition-colors';
+
+// Every second while the page is visible: numbers, label, amber "closing soon", Open Now badge, today's row at midnight
+let _hoursDay = null, _cdSoon = null, _tickTimer = null;
+function tickCountdown() {
+  if (new Date().getDay() !== _hoursDay) { renderHoursList(); return; }
+  const st = getStoreStatus();
+  if (st.open !== state.isOpen) { state.isOpen = st.open; renderOpenStatus(); }
+  const box = $('countdown');
+  if (!box) return;
+  box.hidden = !st.secs;
+  if (!st.secs) return;
+  const soon = !!st.soon;
+  if (soon !== _cdSoon) {
+    _cdSoon = soon;
+    box.querySelectorAll('[data-cdbox]').forEach((b) => { b.className = soon ? CD_SOON : CD_BOX; });
+    $('cdLabel').className = soon ? 'flex items-center gap-1.5 text-[11px] font-bold text-amber-100' : 'flex items-center gap-1.5 text-[11px] font-medium text-white/80';
+    $('cdDot').classList.toggle('hidden', !soon);
+  }
+  const two = (n) => String(n).padStart(2, '0');
+  $('cdText').textContent = t(soon ? 'closingSoon' : st.open ? 'closesIn' : 'opensIn');
+  $('cdH').textContent = two(Math.floor(st.secs / 3600));
+  $('cdM').textContent = two(Math.floor((st.secs % 3600) / 60));
+  $('cdS').textContent = two(st.secs % 60);
 }
+// Paused while the page is in the background; re-synced with the real clock when the customer comes back
+function startTicker() { clearInterval(_tickTimer); tickCountdown(); _tickTimer = setInterval(tickCountdown, 1000); }
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { clearInterval(_tickTimer); _tickTimer = null; } else startTicker();
+});
 
 /* ====================================================================
  * §7 — RENDERERS
@@ -1885,17 +1928,34 @@ function renderHoursList() {
   const names = DAY_NAMES[state.locale] || DAY_NAMES.en;
   const range = hoursRangeText();
   const todayIdx = new Date().getDay();
+  _hoursDay = todayIdx;
+  _cdSoon = null;
+  const cdBox = (id, key) =>
+    '<div data-cdbox class="' + CD_BOX + '">' +
+      '<span id="' + id + '" class="tnum block text-lg font-bold leading-none text-white">00</span>' +
+      '<span class="mt-1 block text-[10px] font-medium leading-none text-white/75">' + esc(t(key)) + '</span>' +
+    '</div>';
 
   list.innerHTML = names.map((name, i) => {
     const isToday = i === todayIdx;
-    return '<li class="flex items-center justify-between gap-3 py-2 ' + (isToday ? 'font-semibold' : '') + '">' +
-      '<span class="flex items-center gap-2 ' + (isToday ? 'text-white' : 'text-white/80') + '">' +
-        (isToday ? '<span class="h-1.5 w-1.5 rounded-full bg-white"></span>' : '') +
-        esc(name) +
-      '</span>' +
-      '<span class="tnum text-white" dir="ltr">' + esc(range) + '</span>' +
+    return '<li class="py-2 ' + (isToday ? 'font-semibold' : '') + '">' +
+      '<div class="flex items-center justify-between gap-3">' +
+        '<span class="flex items-center gap-2 ' + (isToday ? 'text-white' : 'text-white/80') + '">' +
+          (isToday ? '<span class="h-1.5 w-1.5 rounded-full bg-white"></span>' : '') +
+          esc(name) +
+        '</span>' +
+        '<span class="tnum text-white" dir="ltr">' + esc(range) + '</span>' +
+      '</div>' +
+      (isToday
+        ? '<div id="countdown" class="mt-2">' +
+            '<p id="cdLabel" class="flex items-center gap-1.5 text-[11px] font-medium text-white/80">' +
+              '<span id="cdDot" class="hidden h-1.5 w-1.5 animate-pulse rounded-full bg-amber-300"></span><span id="cdText"></span></p>' +
+            '<div class="mt-1 grid grid-cols-3 gap-2" dir="ltr">' + cdBox('cdH', 'cdHours') + cdBox('cdM', 'cdMinutes') + cdBox('cdS', 'cdSeconds') + '</div>' +
+          '</div>'
+        : '') +
     '</li>';
   }).join('');
+  tickCountdown();
 }
 
 /* ── Item details (tap a card) ── */
@@ -2217,7 +2277,7 @@ function init() {
   showIntro();
   refreshIcons();
 
-  window.setInterval(refreshOpenStatus, 60_000);
+  startTicker();
 }
 
 if (document.readyState === 'loading') {
